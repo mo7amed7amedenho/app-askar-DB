@@ -8,7 +8,7 @@ import {
   Select,
   SelectItem,
 } from "@heroui/react";
-export const status = [
+const status = [
   { key: "نشط", label: "نشط" },
   { key: "غير نشط", label: "غير نشط" },
 ];

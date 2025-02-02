@@ -33,7 +33,7 @@ type CircleChartProps = {
   chartData: ChartData[];
   total: number;
 };
-export const users = [
+const users = [
   {
     key: "1",
     name: "Tony Reichert",
