@@ -1,11 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  DatePicker,
-  Button,
-  Autocomplete,
-} from "@heroui/react";
+import { DatePicker, Button, Autocomplete } from "@heroui/react";
 import { IoPrint } from "react-icons/io5";
 
 const employees = [
@@ -240,10 +236,11 @@ export default function SalaryReportsPage() {
           id="employees"
           label="اسم العامل"
           placeholder="ادخل اسم العامل"
-          children={null}
           defaultItems={employees}
           className="mb-4"
-        />
+        >
+          <option value=""></option>
+        </Autocomplete>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
             <DatePicker id="startDate" label="من تاريخ" />

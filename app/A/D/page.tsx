@@ -8,7 +8,6 @@ import {
   Select,
   Autocomplete,
   Form,
-  RangeValue,
 } from "@heroui/react";
 import {
   now,
@@ -34,7 +33,7 @@ export default function MaintenanceExpensesPage() {
       end: today(getLocalTimeZone()),
     },
   });
-  const [, setDateRange] = useState<{
+  const [,] = useState<{
     start: CalendarDate;
     end: CalendarDate;
   } | null>(null);

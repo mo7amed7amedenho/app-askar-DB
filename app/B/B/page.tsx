@@ -34,7 +34,13 @@ export default function AddEmployeePage() {
           إضافة عامل جديد
         </h2>
         <Form className="space-y-4" onSubmit={handleSubmit}>
-          <Autocomplete label="اسم العامل" name="اسم العامل" children={null} variant="underlined" />
+          <Autocomplete
+            label="اسم العامل"
+            name="اسم العامل"
+            variant="underlined"
+          >
+            <option value=""></option>
+          </Autocomplete>
           <Input
             isRequired
             variant="underlined"

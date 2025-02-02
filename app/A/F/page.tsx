@@ -1,17 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import {
-  Button,
-  DatePicker,
-  Input,
-  Autocomplete,
-  Form,
-} from "@heroui/react";
-import {
-  now,
-  getLocalTimeZone,
-  today,
-} from "@internationalized/date";
+import { Button, DatePicker, Input, Autocomplete, Form } from "@heroui/react";
+import { now, getLocalTimeZone, today } from "@internationalized/date";
 
 export default function EmployeeBonusPage() {
   const [formData, setFormData] = useState({
@@ -71,11 +61,9 @@ export default function EmployeeBonusPage() {
           إضافة مكافأة على العامل
         </h2>
         <Form className="space-y-4">
-          <Autocomplete
-            label="اسم العامل"
-            placeholder="ابحث عن العامل"
-            children={null}
-          />
+          <Autocomplete label="اسم العامل" placeholder="ابحث عن العامل">
+            <option value=""></option>
+          </Autocomplete>
           <Input
             label="المبلغ المكافأة"
             placeholder="0.00"
@@ -86,13 +74,17 @@ export default function EmployeeBonusPage() {
               </div>
             }
             type="number"
-            onChange={(e) => setFormData({ ...formData, bonusAmount: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, bonusAmount: e.target.value })
+            }
           />
           <Input
             label="سبب المكافأة"
             placeholder="أدخل سبب المكافأة"
             className="w-full"
-            onChange={(e) => setFormData({ ...formData, bonusReason: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, bonusReason: e.target.value })
+            }
           />
           <DatePicker
             label="تاريخ المكافأة"

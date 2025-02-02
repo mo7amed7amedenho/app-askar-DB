@@ -236,10 +236,11 @@ export default function SalaryReportsPage() {
           id="employees"
           label="اسم المعدة"
           placeholder="ادخل اسم المعدة"
-          children={null}
           defaultItems={employees}
           className="mb-4"
-        />
+        >
+          <option value=""></option>
+        </Autocomplete>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
             <DatePicker id="startDate" label="من تاريخ" />

@@ -55,23 +55,24 @@ export default function AttendancePage() {
           <Form className="space-y-4" onSubmit={handleSubmit}>
             <Autocomplete
               label="اسم الموظف"
-              children={null}
               required
               value={attendanceData.employeeId}
-              onChange={(e: { target: { value: any } }) =>
+              onChange={(e: { target: { value: string } }) =>
                 setAttendanceData({
                   ...attendanceData,
                   employeeId: e.target.value,
                 })
               }
-            />
+            >
+              <option value=""></option>
+            </Autocomplete>
             <div className="grid grid-cols-3 gap-4">
               <Input
                 label="التاريخ"
                 type="date"
                 required
                 value={attendanceData.date}
-                onChange={(e: { target: { value: any } }) =>
+                onChange={(e: { target: { value: string } }) =>
                   setAttendanceData({ ...attendanceData, date: e.target.value })
                 }
               />
@@ -81,7 +82,7 @@ export default function AttendancePage() {
                 type="time"
                 required
                 value={attendanceData.checkIn}
-                onChange={(e: { target: { value: any } }) =>
+                onChange={(e: { target: { value: string } }) =>
                   setAttendanceData({
                     ...attendanceData,
                     checkIn: e.target.value,
@@ -94,7 +95,7 @@ export default function AttendancePage() {
                 type="time"
                 required
                 value={attendanceData.checkOut}
-                onChange={(e: { target: { value: any } }) =>
+                onChange={(e: { target: { value: string } }) =>
                   setAttendanceData({
                     ...attendanceData,
                     checkOut: e.target.value,

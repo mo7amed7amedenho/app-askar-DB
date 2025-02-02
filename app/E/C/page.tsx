@@ -34,8 +34,9 @@ export default function AddToolPage() {
             onChange={(e) =>
               setToolData({ ...toolData, toolName: e.target.value })
             }
-            children={null}
-          />
+          >
+            <option value=""></option>
+          </Autocomplete>
 
           <Input
             isRequired

@@ -69,7 +69,10 @@ export default function Page() {
             type="number"
             onChange={handleLoanChange}
           />
-          <Select label="اختر العهدة" className="w-full" children={null} />
+          <Select label="اختر العهدة" className="w-full">
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+          </Select>
           <Input
             className="text-lg font-semibold text-zinc-800 dark:text-white mt-4 w-64"
             readOnly

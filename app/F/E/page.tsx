@@ -70,10 +70,10 @@ const expenseData: Record<number, Expense[]> = {
 };
 
 const AssetExpenseReport: React.FC = () => {
-  const [selectedAsset, setSelectedAsset] = useState<number | null>(null);
-  const [selectedType, setSelectedType] = useState<string>("");
+  const [selectedAsset, ] = useState<number | null>(null);
+  const [selectedType, ] = useState<string>("");
   const [filterValue, setFilterValue] = useState<string>("");
-  const [dateRange, setDateRange] = useState<{ start?: Date; end?: Date }>({});
+  const [dateRange, ] = useState<{ start?: Date; end?: Date }>({});
   const [showExpenses, setShowExpenses] = useState<boolean>(false);
 
   console.log("Selected Asset:", selectedAsset);

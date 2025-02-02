@@ -1,12 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  DatePicker,
-  Input,
-  Autocomplete,
-  Form,
-} from "@heroui/react";
+import { Button, DatePicker, Input, Autocomplete, Form } from "@heroui/react";
 import { now, getLocalTimeZone, ZonedDateTime } from "@internationalized/date";
 interface AssetData {
   assetName: string;
@@ -57,8 +51,9 @@ export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
             onChange={(e) =>
               setFormData({ ...formData, assetName: e.target.value })
             }
-            children={null}
-          />
+          >
+            <option value=""></option>
+          </Autocomplete>
           <Input
             label="الوحدة"
             placeholder="أدخل الوحدة"

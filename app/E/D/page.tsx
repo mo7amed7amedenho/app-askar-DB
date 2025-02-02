@@ -34,8 +34,9 @@ export default function AddToolPage() {
             onChange={(e) =>
               setToolData({ ...toolData, toolName: e.target.value })
             }
-            children={null}
-          />
+          >
+            <option value=""></option>
+          </Autocomplete>
 
           <Input
             isRequired
@@ -49,7 +50,7 @@ export default function AddToolPage() {
               setToolData({ ...toolData, toolQuantity: e.target.value })
             }
           />
-           <Input
+          <Input
             isRequired
             variant="underlined"
             label="سعر العدة"

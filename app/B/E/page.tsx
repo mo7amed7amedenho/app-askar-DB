@@ -84,10 +84,10 @@ export default function AttendanceReport() {
     id?: number;
     name?: string;
     job?: string;
-    dailySalary: any;
-    attendanceDays: any;
-    extraHours: any;
-    totalAdvance: any;
+    dailySalary: number;
+    attendanceDays: number;
+    extraHours: number;
+    totalAdvance: number;
   }) => {
     const { dailySalary, attendanceDays, extraHours, totalAdvance } = user;
     const extraSalary = extraHours * (dailySalary / 8);

@@ -58,8 +58,9 @@ export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
             onChange={(e) =>
               setFormData({ ...formData, assetName: e.target.value })
             }
-            children={null}
-          />
+          >
+            <option value=""></option>
+          </Autocomplete>
 
           <Input
             label="المبلغ المصروف"

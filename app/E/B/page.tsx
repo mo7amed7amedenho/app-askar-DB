@@ -31,7 +31,12 @@ export default function AddToolPage() {
             placeholder="أدخل اسم العدة"
             className="w-full"
             value={toolData.toolName}
-            onChange={(e) => setToolData({ ...toolData, toolName: e.target.value })} children={null}          />
+            onChange={(e) =>
+              setToolData({ ...toolData, toolName: e.target.value })
+            }
+          >
+            <option value="tool1">tool1</option>
+          </Autocomplete>
           <Input
             isRequired
             variant="underlined"

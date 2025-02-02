@@ -8,10 +8,7 @@ import {
   Autocomplete,
   Form,
 } from "@heroui/react";
-import {
-  now,
-  getLocalTimeZone,
-} from "@internationalized/date";
+import { now, getLocalTimeZone } from "@internationalized/date";
 
 export const kinds = [
   { key: "راتب", label: "💰 راتب" },
@@ -49,18 +46,18 @@ export default function SalaryPage() {
           صرف الراتب
         </h2>
         <Form className="space-y-4">
-          <Autocomplete
-            label="اسم العامل"
-            placeholder="ابحث عن العامل"
-            children={null}
-          />
+          <Autocomplete label="اسم العامل" placeholder="ابحث عن العامل">
+            <option value=""></option>
+          </Autocomplete>
           <DatePicker
             hideTimeZone
             showMonthAndYearPickers
             defaultValue={now(getLocalTimeZone())}
             label="Event Date"
           />
-          <Select label="اختر العهدة" className="w-full" children={null} />
+          <Select label="اختر العهدة" className="w-full">
+            <option value=""></option>
+          </Select>
 
           <div className="grid grid-cols-3 gap-4">
             <Input

@@ -1,12 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import {
-  Button,
-  DatePicker,
-  Input,
-  Autocomplete,
-  Form,
-} from "@heroui/react";
+import { Button, DatePicker, Input, Autocomplete, Form } from "@heroui/react";
 import { now, getLocalTimeZone, today } from "@internationalized/date";
 
 export default function AddAssetPage() {
@@ -93,11 +87,9 @@ export default function AddAssetPage() {
             }
           />
 
-          <Autocomplete
-            label="تابعه لمشروع"
-            placeholder="ابحث عن المشروع"
-            children={null}
-          />
+          <Autocomplete label="تابعه لمشروع" placeholder="ابحث عن المشروع">
+            <option value=""></option>
+          </Autocomplete>
           <DatePicker
             label="تاريخ الاستلام"
             hideTimeZone
