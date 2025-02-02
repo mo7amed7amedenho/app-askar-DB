@@ -10,12 +10,6 @@ import {
 } from "@heroui/react";
 import { now, getLocalTimeZone } from "@internationalized/date";
 
-export const kinds = [
-  { key: "راتب", label: "💰 راتب" },
-  { key: "مكافأة", label: "🎉 مكافأة" },
-  { key: "بدلات", label: "🏠 بدلات" },
-  { key: "أخرى", label: "🔹 أخرى" },
-];
 
 export default function SalaryPage() {
   // const [formData, setFormData] = useState({
