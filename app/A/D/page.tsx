@@ -16,7 +16,7 @@ import {
   CalendarDate,
 } from "@internationalized/date";
 
-export const expenseTypes = [
+const expenseTypes = [
   { key: "إصلاح", label: "🔧 إصلاح" },
   { key: "استبدال", label: "🔄 استبدال" },
   { key: "صيانة دورية", label: "🛠️ صيانة دورية" },
