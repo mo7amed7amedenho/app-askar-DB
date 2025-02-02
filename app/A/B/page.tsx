@@ -28,7 +28,7 @@ export const animals = [
   { label: "Crocodile", key: "crocodile" },
 ];
 
-export default function page() {
+export default function Page() {
   const [salary] = useState(0);
   const [, setLoan] = useState(0);
   const [, setRemainingSalary] = useState(0);

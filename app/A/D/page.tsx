@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 "use client";
 import React, { useState } from "react";
 import {
@@ -37,13 +38,13 @@ export default function MaintenanceExpensesPage() {
     start: CalendarDate;
     end: CalendarDate;
   } | null>(null);
-  const handleDateChange = (value: RangeValue<CalendarDate> | null) => {
-    if (value) {
-      setDateRange({ start: value.start, end: value.end });
-    } else {
-      setDateRange(null);
-    }
-  };
+  // const handleDateChange = (value: RangeValue<CalendarDate> | null) => {
+  //   if (value) {
+  //     setDateRange({ start: value.start, end: value.end });
+  //   } else {
+  //     setDateRange(null);
+  //   }
+  // };
 
   const handlePrint = () => {
     const printWindow = window.open("", "window", "width=800,height=600");
