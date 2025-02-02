@@ -12,7 +12,7 @@ import {
 import { now, getLocalTimeZone } from "@internationalized/date";
 import { useState } from "react";
 
-export const animals = [
+const animals = [
   { label: "Cat", key: "cat" },
   { label: "Dog", key: "dog" },
   { label: "Elephant", key: "elephant" },
