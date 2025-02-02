@@ -10,7 +10,7 @@ import {
   Form,
 } from "@heroui/react";
 import { now, getLocalTimeZone } from "@internationalized/date";
-export const kinds = [
+const kinds = [
   { key: "طعام", label: "🍽 طعام" },
   { key: "مواصلات", label: "🚗 مواصلات" },
   { key: "بنزين", label: "⛽ بنزين" },
