@@ -1,17 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import {
-  Button,
-  DatePicker,
-  Input,
-  Autocomplete,
-  Form,
-} from "@heroui/react";
-import {
-  now,
-  getLocalTimeZone,
-  today,
-} from "@internationalized/date";
+import { Button, DatePicker, Input, Autocomplete, Form } from "@heroui/react";
+import { now, getLocalTimeZone, today } from "@internationalized/date";
 
 export default function EmployeeDiscountPage() {
   const [formData, setFormData] = useState({
@@ -21,7 +11,6 @@ export default function EmployeeDiscountPage() {
     date: today(getLocalTimeZone()),
   });
 
-  
   const handlePrint = () => {
     const printWindow = window.open("", "window", "width=800,height=600");
     if (!printWindow) {
@@ -72,11 +61,9 @@ export default function EmployeeDiscountPage() {
           إضافة خصم على العامل
         </h2>
         <Form className="space-y-4">
-          <Autocomplete
-            label="اسم العامل"
-            placeholder="ابحث عن العامل"
-            children={null}
-          />
+          <Autocomplete label="اسم العامل" placeholder="ابحث عن العامل">
+            <option value="">محمد حامد</option>
+          </Autocomplete>
           <Input
             label="المبلغ الذي سيتم خصمه"
             placeholder="0.00"
@@ -87,9 +74,11 @@ export default function EmployeeDiscountPage() {
               </div>
             }
             type="number"
-            onChange={(e) => setFormData({ ...formData, discountAmount: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, discountAmount: e.target.value })
+            }
           />
-         
+
           <DatePicker
             label="تاريخ الخصم"
             hideTimeZone
