@@ -21,38 +21,48 @@ export default function EditAssetPage() {
     <div className="flex flex-col items-center justify-center space-y-3 p-4">
       <div className="bg-white dark:bg-zinc-900 shadow-lg rounded-2xl p-6 w-full max-w-lg">
         <h2 className="text-2xl font-semibold text-center dark:text-white text-zinc-800 mb-6">
-          تعديل بيانات المستهلك
+          صرف من المخزون
         </h2>
-        <Form className="space-y-4">
+        <Form className="space-y-4 justify-center">
           <Autocomplete
-            label="اسم المستهلك"
-            placeholder="أدخل اسم العهدة"
+            label="اسم العامل"
+            placeholder="أدخل اسم العامل"
             className="w-full"
           >
             <AutocompleteItem value="Option 1">Option 1</AutocompleteItem>
             <AutocompleteItem value="Option 2">Option 2</AutocompleteItem>
           </Autocomplete>
           <Autocomplete
-            label="اسم المورد"
-            placeholder="أدخل اسم المورد"
+            label="اسم الوحدة"
+            placeholder="أدخل اسم الوحدة"
             className="w-full"
           >
             <AutocompleteItem value="Option 1">Option 1</AutocompleteItem>
             <AutocompleteItem value="Option 2">Option 2</AutocompleteItem>
           </Autocomplete>
-          <Input label="الوحدة" placeholder="أدخل الوحدة" className="w-full" />
           <Input
             label="الكمية"
             type="number"
             placeholder="0"
             className="w-full"
           />
-          <Input
-            label="الحد الأدنى للكمية"
-            type="number"
-            placeholder="0"
-            className="w-full"
-          />
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              label="الحد الأدنى للكمية"
+              type="number"
+              disabled
+              placeholder="0"
+              className="w-full"
+            />
+            <Input
+              label="المتبقي للكمية"
+              type="number"
+              disabled
+              placeholder="0"
+              className="w-full"
+            />
+          </div>
+
           <DatePicker
             label="تاريخ الاستلام"
             hideTimeZone

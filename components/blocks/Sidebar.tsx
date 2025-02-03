@@ -31,6 +31,7 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { FaBoxesPacking } from "react-icons/fa6";
 
 import { usePathname } from "next/navigation";
+import { GiClothes } from "react-icons/gi";
 
 // قائمة التكوين
 const MENU_ITEMS = [
@@ -120,11 +121,26 @@ const MENU_ITEMS = [
       // { title: "إدارة المعدات", icon: FaToolbox, link: "#" },
       { title: "إضافة عدة جديد", icon: FaPlus, link: "/E/A" },
       { title: "تعديل بيانات عدة", icon: FaUserEdit, link: "/E/B" },
+      { title: "صرف من المخزون", icon: FaPlus, link: "/E/F" },
+      { title: "إسترجاع الى المخزون", icon: FaPlus, link: "/E/G" },
       { title: "مصروفات صيانة", icon: FaWrench, link: "/A/D" },
       { title: "إضافة عدة الى الصيانه", icon: FaWrench, link: "/E/C" },
       { title: "إضافة عدة الى الهوالك", icon: FaTrash, link: "/E/D" },
       { title: "تقارير المعدات", icon: FaChartLine, link: "/E/E" },
       { title: "تقارير مصروفات صيانه", icon: FaChartLine, link: "/A/L" },
+    ],
+  },
+  {
+    title: "إدارة المهمات",
+    icon: GiClothes,
+    link: "#",
+    subItems: [
+      // { title: "إدارة المعدات", icon: FaToolbox, link: "#" },
+      { title: "إضافة وحدة جديدة", icon: FaPlus, link: "/H/A" },
+      // { title: "تعديل بيانات وحده", icon: FaUserEdit, link: "/H/B" },
+      { title: "صرف من المخزون", icon: FaPlus, link: "/H/C" },
+      { title: "تقارير المخزون", icon: FaChartLine, link: "/H/D" },
+      { title: "تقارير إستلام عمال", icon: FaChartLine, link: "/H/E" },
     ],
   },
   {

@@ -29,7 +29,7 @@ export default function EditAssetPage() {
         <Form className="space-y-4 justify-center">
           <Autocomplete
             label="اسم المستهلك"
-            placeholder="أدخل اسم العهدة"
+            placeholder="أدخل اسم المستهلك"
             className="w-full"
            
           >

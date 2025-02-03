@@ -5,6 +5,8 @@ import {
   DatePicker,
   Input,
   Form,
+  Autocomplete,
+  AutocompleteItem,
 } from "@heroui/react";
 import { now, getLocalTimeZone, today } from "@internationalized/date";
 
@@ -66,6 +68,14 @@ export default function AddAssetPage() {
           إضافة مستهلك جديد
         </h2>
         <Form className="space-y-4">
+          <Autocomplete
+            label="اسم المورد"
+            placeholder="أدخل اسم المورد"
+            className="w-full"
+          >
+            <AutocompleteItem value="Option 1">Option 1</AutocompleteItem>
+            <AutocompleteItem value="Option 2">Option 2</AutocompleteItem>
+          </Autocomplete>
           <Input
             label="اسم المستهلك"
             placeholder="أدخل اسم المستهلك"
@@ -91,7 +101,7 @@ export default function AddAssetPage() {
               setFormData({ ...formData, quantity: e.target.value })
             }
           />
-           <Input
+          <Input
             label="الحد الأدنى للكمية"
             type="number"
             placeholder="0"

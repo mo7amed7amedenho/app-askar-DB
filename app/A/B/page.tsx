@@ -11,6 +11,7 @@ import {
   SelectItem,
 } from "@heroui/react";
 import { now, getLocalTimeZone } from "@internationalized/date";
+import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 
 const animals = [
@@ -47,7 +48,14 @@ export default function Page() {
   const [salary] = useState(0);
   const [, setLoan] = useState(0);
   const [, setRemainingSalary] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
 
+  const handleSave = () => {
+    setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 5000);
+  };
   const handleLoanChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const loanValue = parseFloat(e.target.value);
     setLoan(loanValue);
@@ -97,9 +105,9 @@ export default function Page() {
 
           <div className="flex justify-between gap-4">
             <Button
-              type="submit"
               color="primary"
               className="w-full py-2 text-lg font-medium"
+              onClick={handleSave}
             >
               حفظ الطلب
             </Button>
@@ -114,11 +122,21 @@ export default function Page() {
         </Form>
       </div>
 
-      <Alert
-        color="success"
-        title="تم تقديم طلب السلفة بنجاح"
-        className="max-w-lg mt-4"
-      />
+      <AnimatePresence>
+        {showAlert && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            transition={{ duration: 0.3 }}
+            className="fixed bottom-4 left-4"
+          >
+            <div className="mt-4">
+              <Alert color="success" title="تم حفظ التعديلات" />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
