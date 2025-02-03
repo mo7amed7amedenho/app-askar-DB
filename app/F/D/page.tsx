@@ -9,36 +9,10 @@ import {
   Textarea,
   AutocompleteItem,
 } from "@heroui/react";
-import { now, getLocalTimeZone, ZonedDateTime } from "@internationalized/date";
-interface AssetData {
-  assetName: string;
-  assetNumber: string;
-  quantity: string;
-  project: string;
-  dateReceived: ZonedDateTime;
-}
-export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
-  const [formData, setFormData] = useState({
-    assetName: "",
-    assetNumber: "",
-    quantity: "",
-    project: "",
-    dateReceived: now(getLocalTimeZone()),
-  });
+import { now, getLocalTimeZone } from "@internationalized/date";
 
+export default function EditAssetPage() {
   // تحميل بيانات العهدة عند فتح الصفحة
-  useEffect(() => {
-    if (assetData) {
-      setFormData({
-        assetName: assetData.assetName || "",
-        assetNumber: assetData.assetNumber || "",
-        quantity: assetData.quantity || "",
-        project: assetData.project || "",
-        dateReceived:
-          assetData.dateReceived || now(getLocalTimeZone()).toDate(),
-      });
-    }
-  }, [assetData]);
 
   const handleSave = () => {
     alert("تم حفظ التعديلات بنجاح!");
@@ -55,10 +29,6 @@ export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
             label="اسم المشروع"
             placeholder="أدخل اسم المشروع"
             className="w-full"
-            value={formData.assetName}
-            onChange={(e) =>
-              setFormData({ ...formData, assetName: e.target.value })
-            }
           >
             <AutocompleteItem value="Option 1">Option 1</AutocompleteItem>
           </Autocomplete>
@@ -68,18 +38,12 @@ export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
             type="number"
             placeholder="0"
             className="w-full"
-            onChange={(e) =>
-              setFormData({ ...formData, quantity: e.target.value })
-            }
           />
           <Textarea
             label="ملاحظات"
             type="string"
             placeholder="أدخل ملاحظات"
             className="w-full"
-            onChange={(e) =>
-              setFormData({ ...formData, project: e.target.value })
-            }
           />
 
           <DatePicker

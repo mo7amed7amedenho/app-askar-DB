@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Button,
   DatePicker,
@@ -8,36 +8,13 @@ import {
   Form,
   AutocompleteItem,
 } from "@heroui/react";
-import { now, getLocalTimeZone, ZonedDateTime } from "@internationalized/date";
-interface AssetData {
-  assetName: string;
-  assetNumber: string;
-  quantity: string;
-  project: string;
-  dateReceived: ZonedDateTime;
-}
-export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
-  const [formData, setFormData] = useState({
-    assetName: "",
-    assetNumber: "",
-    quantity: "",
-    project: "",
-    dateReceived: now(getLocalTimeZone()),
-  });
+import { now, getLocalTimeZone } from "@internationalized/date";
+
+export default function EditAssetPage() {
+  
 
   // تحميل بيانات العهدة عند فتح الصفحة
-  useEffect(() => {
-    if (assetData) {
-      setFormData({
-        assetName: assetData.assetName || "",
-        assetNumber: assetData.assetNumber || "",
-        quantity: assetData.quantity || "",
-        project: assetData.project || "",
-        dateReceived:
-          assetData.dateReceived || now(getLocalTimeZone()).toDate(),
-      });
-    }
-  }, [assetData]);
+  
 
   const handleSave = () => {
     alert("تم حفظ التعديلات بنجاح!");
@@ -54,10 +31,7 @@ export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
             label="اسم المستهلك"
             placeholder="أدخل اسم العهدة"
             className="w-full"
-            value={formData.assetName}
-            onChange={(e) =>
-              setFormData({ ...formData, assetName: e.target.value })
-            }
+           
           >
             <AutocompleteItem value="Option 1">Option 1</AutocompleteItem>
             <AutocompleteItem value="Option 2">Option 2</AutocompleteItem>
@@ -67,9 +41,7 @@ export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
             type="number"
             placeholder="0"
             className="w-full"
-            onChange={(e) =>
-              setFormData({ ...formData, quantity: e.target.value })
-            }
+           
           />
           <div className="grid grid-cols-2 gap-4">
             <Input
@@ -78,9 +50,7 @@ export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
               disabled
               placeholder="0"
               className="w-full"
-              onChange={(e) =>
-                setFormData({ ...formData, quantity: e.target.value })
-              }
+            
             />
             <Input
               label="المتبقي للكمية"
@@ -88,9 +58,7 @@ export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
               disabled
               placeholder="0"
               className="w-full"
-              onChange={(e) =>
-                setFormData({ ...formData, quantity: e.target.value })
-              }
+             
             />
           </div>
 
