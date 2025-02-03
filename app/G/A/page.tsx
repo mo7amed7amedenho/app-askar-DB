@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { Button, DatePicker, Input, Form } from "@heroui/react";
-import { now, getLocalTimeZone, today } from "@internationalized/date";
+import { Button, Input, Form } from "@heroui/react";
+import { getLocalTimeZone, today } from "@internationalized/date";
 
 export default function AddAssetPage() {
   const [formData, setFormData] = useState({
