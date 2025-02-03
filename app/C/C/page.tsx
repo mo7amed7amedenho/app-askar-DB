@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Button,
   DatePicker,
@@ -8,37 +8,8 @@ import {
   Form,
   AutocompleteItem,
 } from "@heroui/react";
-import { now, getLocalTimeZone, ZonedDateTime } from "@internationalized/date";
-interface AssetData {
-  assetName: string;
-  assetNumber: string;
-  quantity: string;
-  project: string;
-  dateReceived: ZonedDateTime;
-}
-export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
-  const [formData, setFormData] = useState({
-    assetName: "",
-    assetNumber: "",
-    quantity: "",
-    project: "",
-    dateReceived: now(getLocalTimeZone()),
-  });
 
-  // تحميل بيانات العهدة عند فتح الصفحة
-  useEffect(() => {
-    if (assetData) {
-      setFormData({
-        assetName: assetData.assetName || "",
-        assetNumber: assetData.assetNumber || "",
-        quantity: assetData.quantity || "",
-        project: assetData.project || "",
-        dateReceived:
-          assetData.dateReceived || now(getLocalTimeZone()).toDate(),
-      });
-    }
-  }, [assetData]);
-
+export default function EditAssetPage() {
   const handleSave = () => {
     alert("تم حفظ التعديلات بنجاح!");
   };
@@ -54,10 +25,6 @@ export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
             label="اسم العهدة"
             placeholder="أدخل اسم العهدة"
             className="w-full"
-            value={formData.assetName}
-            onChange={(e) =>
-              setFormData({ ...formData, assetName: e.target.value })
-            }
           >
             <AutocompleteItem key="1">مشروع 1</AutocompleteItem>
           </Autocomplete>
@@ -65,33 +32,20 @@ export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
             label="رقم العهدة"
             placeholder="أدخل رقم العهدة"
             className="w-full"
-            value={formData.assetNumber}
-            onChange={(e) =>
-              setFormData({ ...formData, assetNumber: e.target.value })
-            }
           />
           <Input
             label="الكمية"
             type="number"
             placeholder="0"
             className="w-full"
-            value={formData.quantity}
-            onChange={(e) =>
-              setFormData({ ...formData, quantity: e.target.value })
-            }
           />
-          <Autocomplete
-            label="تابعه لمشروع"
-            placeholder="ابحث عن المشروع"
-            value={formData.project}
-          >
+          <Autocomplete label="تابعه لمشروع" placeholder="ابحث عن المشروع">
             <AutocompleteItem key="1">مشروع 1</AutocompleteItem>
           </Autocomplete>
           <DatePicker
             label="تاريخ الاستلام"
             hideTimeZone
             showMonthAndYearPickers
-            defaultValue={formData.dateReceived}
           />
           <div className="grid grid-cols-2 gap-4">
             <Button
