@@ -6,7 +6,6 @@ import {
   Input,
   Autocomplete,
   Form,
-  Textarea,
   AutocompleteItem,
 } from "@heroui/react";
 import { now, getLocalTimeZone, ZonedDateTime } from "@internationalized/date";
@@ -48,12 +47,12 @@ export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
     <div className="flex flex-col items-center justify-center space-y-3 p-4">
       <div className="bg-white dark:bg-zinc-900 shadow-lg rounded-2xl p-6 w-full max-w-lg">
         <h2 className="text-2xl font-semibold text-center dark:text-white text-zinc-800 mb-6">
-          صرف مبلغ لمشروع
+          صرف من المخزون
         </h2>
-        <Form className="space-y-4">
+        <Form className="space-y-4 justify-center">
           <Autocomplete
-            label="اسم المشروع"
-            placeholder="أدخل اسم المشروع"
+            label="اسم المستهلك"
+            placeholder="أدخل اسم العهدة"
             className="w-full"
             value={formData.assetName}
             onChange={(e) =>
@@ -61,10 +60,10 @@ export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
             }
           >
             <AutocompleteItem value="Option 1">Option 1</AutocompleteItem>
+            <AutocompleteItem value="Option 2">Option 2</AutocompleteItem>
           </Autocomplete>
-
           <Input
-            label="المبلغ المصروف"
+            label="الكمية"
             type="number"
             placeholder="0"
             className="w-full"
@@ -72,23 +71,35 @@ export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
               setFormData({ ...formData, quantity: e.target.value })
             }
           />
-          <Textarea
-            label="ملاحظات"
-            type="string"
-            placeholder="أدخل ملاحظات"
-            className="w-full"
-            onChange={(e) =>
-              setFormData({ ...formData, project: e.target.value })
-            }
-          />
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              label="الحد الأدنى للكمية"
+              type="number"
+              disabled
+              placeholder="0"
+              className="w-full"
+              onChange={(e) =>
+                setFormData({ ...formData, quantity: e.target.value })
+              }
+            />
+            <Input
+              label="المتبقي للكمية"
+              type="number"
+              disabled
+              placeholder="0"
+              className="w-full"
+              onChange={(e) =>
+                setFormData({ ...formData, quantity: e.target.value })
+              }
+            />
+          </div>
 
           <DatePicker
-            label="تاريخ الصرف"
+            label="تاريخ الاستلام"
             hideTimeZone
             showMonthAndYearPickers
             defaultValue={now(getLocalTimeZone())}
           />
-
           <div className="grid grid-cols-2 gap-4">
             <Button
               type="button"

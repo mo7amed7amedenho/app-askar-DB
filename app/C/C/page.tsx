@@ -1,6 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button, DatePicker, Input, Autocomplete, Form } from "@heroui/react";
+import {
+  Button,
+  DatePicker,
+  Input,
+  Autocomplete,
+  Form,
+  AutocompleteItem,
+} from "@heroui/react";
 import { now, getLocalTimeZone, ZonedDateTime } from "@internationalized/date";
 interface AssetData {
   assetName: string;
@@ -52,7 +59,7 @@ export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
               setFormData({ ...formData, assetName: e.target.value })
             }
           >
-            <option value=""></option>
+            <AutocompleteItem key="1">مشروع 1</AutocompleteItem>
           </Autocomplete>
           <Input
             label="رقم العهدة"
@@ -78,7 +85,7 @@ export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
             placeholder="ابحث عن المشروع"
             value={formData.project}
           >
-            <option value=""></option>
+            <AutocompleteItem key="1">مشروع 1</AutocompleteItem>
           </Autocomplete>
           <DatePicker
             label="تاريخ الاستلام"
@@ -100,7 +107,7 @@ export default function EditAssetPage({ assetData }: { assetData: AssetData }) {
               color="danger"
               className="w-full py-2 text-lg font-medium"
             >
-              إلغاء التعديلات
+              حذف العهدة
             </Button>
           </div>
         </Form>

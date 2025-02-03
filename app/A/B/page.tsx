@@ -8,6 +8,7 @@ import {
   Autocomplete,
   AutocompleteItem,
   Select,
+  SelectItem,
 } from "@heroui/react";
 import { now, getLocalTimeZone } from "@internationalized/date";
 import { useState } from "react";
@@ -27,7 +28,21 @@ const animals = [
   { label: "Otter", key: "otter" },
   { label: "Crocodile", key: "crocodile" },
 ];
-
+const prices = [
+  { key: "cat", label: "Cat" },
+  { key: "dog", label: "Dog" },
+  { key: "elephant", label: "Elephant" },
+  { key: "lion", label: "Lion" },
+  { key: "tiger", label: "Tiger" },
+  { key: "giraffe", label: "Giraffe" },
+  { key: "dolphin", label: "Dolphin" },
+  { key: "penguin", label: "Penguin" },
+  { key: "zebra", label: "Zebra" },
+  { key: "shark", label: "Shark" },
+  { key: "whale", label: "Whale" },
+  { key: "otter", label: "Otter" },
+  { key: "crocodile", label: "Crocodile" },
+];
 export default function Page() {
   const [salary] = useState(0);
   const [, setLoan] = useState(0);
@@ -70,8 +85,9 @@ export default function Page() {
             onChange={handleLoanChange}
           />
           <Select label="اختر العهدة" className="w-full">
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
+            {prices.map((price) => (
+              <SelectItem key={price.key}>{price.label}</SelectItem>
+            ))}
           </Select>
           <Input
             className="text-lg font-semibold text-zinc-800 dark:text-white mt-4 w-64"

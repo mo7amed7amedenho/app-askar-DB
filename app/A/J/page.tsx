@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { DatePicker, Button, Autocomplete } from "@heroui/react";
+import { DatePicker, Button, Autocomplete, AutocompleteItem } from "@heroui/react";
 import { IoPrint } from "react-icons/io5";
 
 const employees = [
@@ -223,7 +223,7 @@ export default function SalaryReportsPage() {
       <div className="flex justify-between items-center border-b pb-4 mb-6 dark:border-gray-700">
         <div>
           <h1 className="text-xl font-bold text-gray-800 dark:text-gray-200">
-            تقارير سلف خلال مدة
+            تقارير سلف لعامل خلال مدة
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             عرض سلف المدفوعة خلال فترة زمنية محددة.
@@ -239,7 +239,7 @@ export default function SalaryReportsPage() {
           defaultItems={employees}
           className="mb-4"
         >
-          <option value=""></option>
+          <AutocompleteItem>ابحث عن العامل</AutocompleteItem>
         </Autocomplete>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>

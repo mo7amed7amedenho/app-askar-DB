@@ -8,6 +8,8 @@ import {
   Select,
   Autocomplete,
   Form,
+  AutocompleteItem,
+  SelectItem,
 } from "@heroui/react";
 import {
   now,
@@ -24,7 +26,7 @@ const expenseTypes = [
 ];
 
 export default function MaintenanceExpensesPage() {
-  const [formData, ] = useState({
+  const [formData] = useState({
     equipment: "",
     cost: "",
     type: "",
@@ -65,8 +67,13 @@ export default function MaintenanceExpensesPage() {
             <h2>بيانات مصروف الصيانة</h2>
             <p><strong>اسم المعدة:</strong> ${formData.equipment}</p>
             <p><strong>التكلفة:</strong> ${formData.cost} $</p>
-            <p><strong>نوع المصروف:</strong> ${expenseTypes.find((t) => t.key === formData.type)?.label || "غير محدد"}</p>
-            <p><strong>الفترة:</strong> ${formData.dateRange.start} - ${formData.dateRange.end}</p>
+            <p><strong>نوع المصروف:</strong> ${
+              expenseTypes.find((t) => t.key === formData.type)?.label ||
+              "غير محدد"
+            }</p>
+            <p><strong>الفترة:</strong> ${formData.dateRange.start} - ${
+      formData.dateRange.end
+    }</p>
             <button onclick="window.print()">طباعة</button>
           </div>
         </body>
@@ -95,11 +102,9 @@ export default function MaintenanceExpensesPage() {
           مصروفات الصيانة
         </h2>
         <Form className="space-y-4">
-          <Autocomplete
-            label="اسم المعدة"
-            placeholder="ابحث عن المعدة"
-            children={null}
-          />
+          <Autocomplete label="اسم المعدة" placeholder="ابحث عن المعدة">
+            <AutocompleteItem>معدة 1</AutocompleteItem>
+          </Autocomplete>
           <DatePicker
             hideTimeZone
             showMonthAndYearPickers
@@ -117,7 +122,9 @@ export default function MaintenanceExpensesPage() {
             }
             type="number"
           />
-          <Select label="اختر العهدة" className="w-full" children={null} />
+          <Select label="اختر العهدة" className="w-full">
+            <SelectItem>اختر العهدة</SelectItem>
+          </Select>
           <div className="grid grid-cols-3 gap-4">
             <Button
               type="submit"

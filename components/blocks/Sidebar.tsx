@@ -28,6 +28,7 @@ import {
   FaGift,
 } from "react-icons/fa";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { FaBoxesPacking } from "react-icons/fa6";
 
 // قائمة التكوين
 const MENU_ITEMS = [
@@ -45,7 +46,7 @@ const MENU_ITEMS = [
       { title: "المصاريف اليومية", icon: FaFileInvoice, link: "/A/A" },
       { title: "سند صرف سلفة", icon: FaCoins, link: "/A/B" },
       { title: "سند صرف الراتب", icon: FaClipboardList, link: "/A/C" },
-      { title: "مصروفات صيانة", icon: FaWrench, link: "/A/D" },
+      // { title: "مصروفات صيانة", icon: FaWrench, link: "/A/D" },
       { title: "إضافة خصومات", icon: FaPlus, link: "/A/E" },
       { title: "إضافة مكافآت", icon: FaGift, link: "/A/F" },
       { title: "تقارير المصاريف اليومية", icon: FaChartLine, link: "/A/G" },
@@ -57,7 +58,7 @@ const MENU_ITEMS = [
       { title: "تقارير صرف سلف خلال مدة", icon: FaChartLine, link: "/A/I" },
       { title: "تقارير صرف سلفه لعامل", icon: FaChartLine, link: "/A/J" },
       { title: "تقارير الرواتب خلال مدة", icon: FaChartLine, link: "/A/K" },
-      { title: "تقارير مصروفات صيانه", icon: FaChartLine, link: "/A/L" },
+      // { title: "تقارير مصروفات صيانه", icon: FaChartLine, link: "/A/L" },
     ],
   },
   {
@@ -85,11 +86,24 @@ const MENU_ITEMS = [
     ],
   },
   {
+    title: "إدارة الموردين",
+    icon: FaBoxesPacking,
+    link: "#",
+    subItems: [
+      { title: "إضافة مورد جديد", icon: FaBoxOpen, link: "/G/A" },
+      { title: "تعديل بيانات مورد", icon: FaPlus, link: "/G/B" },
+      { title: "إنشاء فاتورة مورد", icon: FaChartLine, link: "/G/C" },
+      { title: "تقارير الموردين", icon: FaChartLine, link: "/G/C" },
+      // { title: "تقارير عهدة المؤرشفة", icon: FaArchive, link: "#" },
+    ],
+  },
+  {
     title: "إدارة المستهلكات",
     icon: FaBoxes,
     link: "#",
     subItems: [
       { title: "إدارة المستهلكات", icon: FaBoxes, link: "/D/A" },
+      { title: "صرف من المخزون", icon: FaChartLine, link: "/D/E" },
       { title: "إضافة مستهلك جديد", icon: FaPlus, link: "/D/B" },
       { title: "تعديل بيانات مستهلك", icon: FaUserEdit, link: "/D/C" },
       { title: "تقارير المستهلكات", icon: FaChartLine, link: "/D/D" },
@@ -104,9 +118,11 @@ const MENU_ITEMS = [
       // { title: "إدارة المعدات", icon: FaToolbox, link: "#" },
       { title: "إضافة عدة جديد", icon: FaPlus, link: "/E/A" },
       { title: "تعديل بيانات عدة", icon: FaUserEdit, link: "/E/B" },
+      { title: "مصروفات صيانة", icon: FaWrench, link: "/A/D" },
       { title: "إضافة عدة الى الصيانه", icon: FaWrench, link: "/E/C" },
       { title: "إضافة عدة الى الهوالك", icon: FaTrash, link: "/E/D" },
       { title: "تقارير المعدات", icon: FaChartLine, link: "/E/E" },
+      { title: "تقارير مصروفات صيانه", icon: FaChartLine, link: "/A/L" },
     ],
   },
   {
@@ -122,6 +138,19 @@ const MENU_ITEMS = [
       // { title: "تقارير مشروع مؤرشفة", icon: FaArchive, link: "#" },
     ],
   },
+  // {
+  //   title: "حذف بيانات",
+  //   icon: FaTrash,
+  //   link: "#",
+  //   subItems: [
+  //     { title: "", icon: FaProjectDiagram, link: "/F/A" },
+  //     { title: "إضافة مشروع جديدة", icon: FaPlus, link: "/F/B" },
+  //     { title: "تعديل بيانات مشروع", icon: FaUserEdit, link: "/F/C" },
+  //     { title: "إضافة مصروف", icon: FaFileInvoice, link: "/F/D" },
+  //     { title: "تقارير مشروع ", icon: FaChartLine, link: "/F/E" },
+  //     // { title: "تقارير مشروع مؤرشفة", icon: FaArchive, link: "#" },
+  //   ],
+  // },
   {
     title: "الإعدادات",
     icon: FaCog,

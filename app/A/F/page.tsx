@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, DatePicker, Input, Autocomplete, Form } from "@heroui/react";
+import { Button, DatePicker, Input, Autocomplete, Form, AutocompleteItem } from "@heroui/react";
 import { now, getLocalTimeZone, today } from "@internationalized/date";
 
 export default function EmployeeBonusPage() {
@@ -62,7 +62,7 @@ export default function EmployeeBonusPage() {
         </h2>
         <Form className="space-y-4">
           <Autocomplete label="اسم العامل" placeholder="ابحث عن العامل">
-            <option value=""></option>
+            <AutocompleteItem>John Doe</AutocompleteItem>
           </Autocomplete>
           <Input
             label="المبلغ المكافأة"

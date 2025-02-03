@@ -8,6 +8,7 @@ import {
   Form,
   Autocomplete,
   CardFooter,
+  AutocompleteItem,
 } from "@heroui/react";
 
 export default function AttendancePage() {
@@ -64,7 +65,9 @@ export default function AttendancePage() {
                 })
               }
             >
-              <option value=""></option>
+              <AutocompleteItem key="1">John Doe</AutocompleteItem>
+              <AutocompleteItem key="2">Jane Smith</AutocompleteItem>
+              <AutocompleteItem key="3">Alice Johnson</AutocompleteItem>
             </Autocomplete>
             <div className="grid grid-cols-3 gap-4">
               <Input

@@ -172,7 +172,9 @@ export default function ExpenseReportPage() {
           </table>
   
           <div class="footer">
-                    <p>تم إنشاء التقرير في ${new Date().toLocaleString("ar-EG")}</p>
+                    <p>تم إنشاء التقرير في ${new Date().toLocaleString(
+                      "ar-EG"
+                    )}</p>
             <p>بواسطة <strong>Hamedenho</strong>، شركة <strong>عسكر للمقاولات العمومية</strong></p>
           </div>
         </body>
@@ -203,9 +205,8 @@ export default function ExpenseReportPage() {
       </div>
 
       <section className="bg-white dark:bg-zinc-900 shadow-md rounded-lg p-6 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 justify-center items-center">
           <div>
-
             <Input
               id="selectedDate"
               className=" p-2 rounded w-full"
@@ -218,13 +219,12 @@ export default function ExpenseReportPage() {
               }}
             />
           </div>
-        </div>
-
-        <div className="flex justify-end gap-4 print:hidden">
-          <Button onClick={handleGenerateReport}>عرض التقرير</Button>
-          <Button variant="bordered" onClick={handleClear}>
-            مسح البيانات
-          </Button>
+          <div className="flex justify-end gap-4 print:hidden">
+            <Button onClick={handleGenerateReport}>عرض التقرير</Button>
+            <Button variant="bordered" onClick={handleClear}>
+              مسح البيانات
+            </Button>
+          </div>
         </div>
       </section>
 

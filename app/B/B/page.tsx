@@ -7,10 +7,16 @@ import {
   Autocomplete,
   Select,
   SelectItem,
+  AutocompleteItem,
 } from "@heroui/react";
 const status = [
   { key: "نشط", label: "نشط" },
   { key: "غير نشط", label: "غير نشط" },
+];
+const people = [
+  { key: "احمد", label: "احمد" },
+  { key: "محمد", label: "محمد" },
+  { key: "سعود", label: "سعود" },
 ];
 export default function AddEmployeePage() {
   const [employeeData, setEmployeeData] = useState({
@@ -31,15 +37,20 @@ export default function AddEmployeePage() {
     <div className="flex flex-col items-center justify-center space-y-3 p-4">
       <div className="bg-white dark:bg-zinc-900 shadow-lg rounded-2xl p-6 w-full max-w-lg">
         <h2 className="text-2xl font-semibold text-center dark:text-white text-zinc-800 mb-6">
-          إضافة عامل جديد
+          تعديل بيانات عامل
         </h2>
         <Form className="space-y-4" onSubmit={handleSubmit}>
           <Autocomplete
             label="اسم العامل"
             name="اسم العامل"
             variant="underlined"
+            defaultItems={people}
           >
-            <option value=""></option>
+            {(people) => (
+              <AutocompleteItem key={people.key}>
+                {people.label}
+              </AutocompleteItem>
+            )}
           </Autocomplete>
           <Input
             isRequired
@@ -109,7 +120,7 @@ export default function AddEmployeePage() {
               color="danger"
               className="w-full py-2 text-lg font-medium"
             >
-              مسح البيانات
+               حذف العامل 
             </Button>
           </div>
         </Form>

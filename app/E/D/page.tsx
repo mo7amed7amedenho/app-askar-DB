@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Input, Form, Autocomplete } from "@heroui/react";
+import { Button, Input, Form, Autocomplete, AutocompleteItem } from "@heroui/react";
 
 export default function AddToolPage() {
   const [toolData, setToolData] = useState({
@@ -35,7 +35,7 @@ export default function AddToolPage() {
               setToolData({ ...toolData, toolName: e.target.value })
             }
           >
-            <option value=""></option>
+           <AutocompleteItem value="Option 1">Option 1</AutocompleteItem>
           </Autocomplete>
 
           <Input

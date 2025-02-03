@@ -7,9 +7,10 @@ import {
   Select,
   Autocomplete,
   Form,
+  AutocompleteItem,
+  SelectItem,
 } from "@heroui/react";
 import { now, getLocalTimeZone } from "@internationalized/date";
-
 
 export default function SalaryPage() {
   // const [formData, setFormData] = useState({
@@ -41,7 +42,7 @@ export default function SalaryPage() {
         </h2>
         <Form className="space-y-4">
           <Autocomplete label="اسم العامل" placeholder="ابحث عن العامل">
-            <option value=""></option>
+            <AutocompleteItem>عبد الله عبد الله</AutocompleteItem>
           </Autocomplete>
           <DatePicker
             hideTimeZone
@@ -50,7 +51,7 @@ export default function SalaryPage() {
             label="Event Date"
           />
           <Select label="اختر العهدة" className="w-full">
-            <option value=""></option>
+           <SelectItem value="option1">Option 1</SelectItem>
           </Select>
 
           <div className="grid grid-cols-3 gap-4">

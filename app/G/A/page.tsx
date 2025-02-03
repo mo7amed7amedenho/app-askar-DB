@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, DatePicker, Input, Autocomplete, Form, AutocompleteItem } from "@heroui/react";
+import { Button, DatePicker, Input, Form } from "@heroui/react";
 import { now, getLocalTimeZone, today } from "@internationalized/date";
 
 export default function AddAssetPage() {
@@ -22,7 +22,7 @@ export default function AddAssetPage() {
   //   printWindow.document.write(`
   //     <html>
   //       <head>
-  //         <title>طباعة بيانات العهدة</title>
+  //         <title>طباعة بيانات المورد</title>
   //         <style>
   //           body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
   //           .container { border: 1px solid #ddd; padding: 20px; margin: auto; width: 50%; }
@@ -30,9 +30,9 @@ export default function AddAssetPage() {
   //       </head>
   //       <body>
   //         <div class='container'>
-  //           <h2>بيانات العهدة</h2>
-  //           <p><strong>اسم العهدة:</strong> ${formData.assetName}</p>
-  //           <p><strong>رقم العهدة:</strong> ${formData.assetNumber}</p>
+  //           <h2>بيانات المورد</h2>
+  //           <p><strong>اسم المورد:</strong> ${formData.assetName}</p>
+  //           <p><strong>رقم المورد:</strong> ${formData.assetNumber}</p>
   //           <p><strong>الكمية:</strong> ${formData.quantity}</p>
   //           <p><strong>الحالة:</strong> ${formData.condition}</p>
   //           <p><strong>المستلم:</strong> ${formData.receiver}</p>
@@ -58,44 +58,35 @@ export default function AddAssetPage() {
     <div className="flex flex-col items-center justify-center space-y-3 p-4">
       <div className="bg-white dark:bg-zinc-900 shadow-lg rounded-2xl p-6 w-full max-w-lg">
         <h2 className="text-2xl font-semibold text-center dark:text-white text-zinc-800 mb-6">
-          إضافة عهدة جديدة
+          إضافة مورد جديدة
         </h2>
         <Form className="space-y-4">
           <Input
-            label="اسم العهدة"
-            placeholder="أدخل اسم العهدة"
+            label="اسم المورد"
+            placeholder="أدخل اسم المورد"
             className="w-full"
             onChange={(e) =>
               setFormData({ ...formData, assetName: e.target.value })
             }
           />
+
           <Input
-            label="رقم العهدة"
-            placeholder="أدخل رقم العهدة"
+            label="رقم الهاتف"
+            type="number"
             className="w-full"
             onChange={(e) =>
-              setFormData({ ...formData, assetNumber: e.target.value })
+              setFormData({ ...formData, quantity: e.target.value })
             }
           />
           <Input
-            label="الكمية"
-            type="number"
-            placeholder="0"
+            label="العنوان"
+            type="string"
             className="w-full"
             onChange={(e) =>
               setFormData({ ...formData, quantity: e.target.value })
             }
           />
 
-          <Autocomplete label="تابعه لمشروع" placeholder="ابحث عن المشروع">
-            <AutocompleteItem key="1">مشروع 1</AutocompleteItem>
-          </Autocomplete>
-          <DatePicker
-            label="تاريخ الاستلام"
-            hideTimeZone
-            showMonthAndYearPickers
-            defaultValue={now(getLocalTimeZone())}
-          />
           <div className="grid grid-cols-3 gap-4">
             <Button
               type="submit"
