@@ -3,7 +3,7 @@ import Link from "next/link";
 import { LuAlignJustify } from "react-icons/lu";
 import { IoMdClose } from "react-icons/io";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Logo from "./Logo";
 import {
   FaHome,
@@ -29,6 +29,8 @@ import {
 } from "react-icons/fa";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { FaBoxesPacking } from "react-icons/fa6";
+
+import { usePathname } from "next/navigation";
 
 // قائمة التكوين
 const MENU_ITEMS = [
@@ -168,11 +170,13 @@ const MENU_ITEMS = [
 const Sidebar = () => {
   const [sidebarToggled, setSidebarToggled] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-
+  const pathname = usePathname();
   const toggleMenu = (menuTitle: string) => {
     setOpenMenu(openMenu === menuTitle ? null : menuTitle);
   };
-
+  useEffect(() => {
+    setSidebarToggled(false);
+  }, [pathname]);
   return (
     <>
       {/* Sidebar */}
