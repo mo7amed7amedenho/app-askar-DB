@@ -92,7 +92,7 @@ const MENU_ITEMS = [
     subItems: [
       { title: "إضافة مورد جديد", icon: FaBoxOpen, link: "/G/A" },
       { title: "تعديل بيانات مورد", icon: FaPlus, link: "/G/B" },
-      { title: "إنشاء فاتورة مورد", icon: FaChartLine, link: "/G/C" },
+      { title: "إنشاء فاتورة مورد", icon: FaChartLine, link: "/G/D" },
       { title: "تقارير الموردين", icon: FaChartLine, link: "/G/C" },
       // { title: "تقارير عهدة المؤرشفة", icon: FaArchive, link: "#" },
     ],
