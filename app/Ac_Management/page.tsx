@@ -1,20 +1,20 @@
 "use client";
 import { Button, Card, Form, Input, Select, SelectItem } from "@heroui/react";
 import React, { useState } from "react";
-// import { PrismaClient } from "@prisma/client";
+// import prisma from "@/lib/prisma";
 export default async function page() {
   const [password, setPassword] = useState("");
   const [, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  //   const prisma = new PrismaClient();
-  //   const user = await prisma.user.create({
-  //     data: {
-  //       name: "hamed",
-  //       email: "Hamedenho@askar",
-  //       password: "123456",
-  //       role: "ADMIN",
-  //     },
-  //   });
+
+  // const user = await prisma.user.create({
+  //   data: {
+  //     name: "hamed",
+  //     email: "Hamedenho@askar",
+  //     password: "123456",
+  //     role: "ADMIN",
+  //   },
+  // });
   const handeleConfirmPassword = (value: string) => {
     setConfirmPassword(value);
     if (value !== password) {
@@ -23,7 +23,7 @@ export default async function page() {
       setError("");
     }
   };
-
+  // console.log(user);
   return (
     <main className="flex items-center justify-center">
       <Card className="w-full p-6 border-b dark:border-b-zinc-700">

@@ -9,14 +9,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
-}
-
-enum Role {
-  ADMIN
-  USER
-  GUEST
 }
 
 model User {
@@ -26,5 +20,15 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  role      Role
+  role      String
+}
+
+model Employee {
+  id                  Int      @id @default(autoincrement())
+  name                String
+  employee_work       String
+  employee_salary     Int
+  employee_plus_hours Int
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
