@@ -2,7 +2,7 @@
 import { Button, Card, Form, Input, Select, SelectItem } from "@heroui/react";
 import React, { useState } from "react";
 // import prisma from "@/lib/prisma";
-export default async function Page() {
+export default function Page() {
   const [password, setPassword] = useState("");
   const [, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
