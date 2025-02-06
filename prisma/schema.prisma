@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,22 +7,147 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  role      String
+model Employee {
+  id          Int          @id @default(autoincrement())
+  name        String
+  jobTitle    String
+  nationalId  String       @unique
+  phoneNumber String
+  dailySalary Decimal
+  salaries    Salary[]
+  attendance  Attendance[]
+  deductions  Deduction[]
+  bonuses     Bonus[]
 }
 
-model Employee {
-  id                  Int      @id @default(autoincrement())
-  name                String
-  employee_work       String
-  employee_salary     Int
-  employee_plus_hours Int
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+model Salary {
+  id            Int      @id @default(autoincrement())
+  employee      Employee @relation(fields: [employeeId], references: [id])
+  employeeId    Int
+  deductions    Decimal
+  overtimeHours Int
+  totalSalary   Decimal
+  periodStart   DateTime
+  periodEnd     DateTime
+}
+
+model Attendance {
+  id         Int       @id @default(autoincrement())
+  employee   Employee  @relation(fields: [employeeId], references: [id])
+  employeeId Int
+  date       DateTime
+  checkIn    DateTime?
+  checkOut   DateTime?
+}
+
+model Deduction {
+  id         Int      @id @default(autoincrement())
+  employee   Employee @relation(fields: [employeeId], references: [id])
+  employeeId Int
+  amount     Decimal
+  date       DateTime
+}
+
+model Bonus {
+  id         Int      @id @default(autoincrement())
+  employee   Employee @relation(fields: [employeeId], references: [id])
+  employeeId Int
+  amount     Decimal
+  reason     String
+  date       DateTime
+}
+
+model Custody {
+  id        Int       @id @default(autoincrement())
+  name      String
+  code      String    @unique
+  quantity  Int
+  status    String    @default("active")
+  expenses  Expense[]
+  project   Project?  @relation(fields: [projectId], references: [id])
+  projectId Int?
+}
+
+model Expense {
+  id                Int      @id @default(autoincrement())
+  description       String
+  amount            Decimal
+  expenseType       String
+  responsiblePerson String
+  custody           Custody  @relation(fields: [custodyId], references: [id])
+  custodyId         Int
+  project           Project? @relation(fields: [projectId], references: [id])
+  projectId         Int?
+  date              DateTime
+}
+
+model Project {
+  id          Int       @id @default(autoincrement())
+  name        String
+  managerName String
+  budget      Decimal
+  startDate   DateTime
+  endDate     DateTime?
+  status      String    @default("active")
+  custodies   Custody[]
+  expenses    Expense[]
+}
+
+model Supplier {
+  id          Int               @id @default(autoincrement())
+  name        String
+  phoneNumber String
+  address     String
+  invoices    SupplierInvoice[]
+
+  Inventory Inventory[]
+}
+
+model SupplierInvoice {
+  id          Int           @id @default(autoincrement())
+  supplier    Supplier      @relation(fields: [supplierId], references: [id])
+  supplierId  Int
+  invoiceType String
+  items       InvoiceItem[]
+  totalAmount Decimal
+}
+
+model InvoiceItem {
+  id        Int             @id @default(autoincrement())
+  invoice   SupplierInvoice @relation(fields: [invoiceId], references: [id])
+  invoiceId Int
+  itemName  String
+  itemType  String
+  quantity  Int
+  unit      String
+  unitPrice Decimal
+}
+
+model Inventory {
+  id           Int       @id @default(autoincrement())
+  itemName     String
+  category     String
+  itemType     String
+  purchaseDate DateTime
+  price        Decimal
+  quantity     Int
+  minQuantity  Int
+  supplier     Supplier? @relation(fields: [supplierId], references: [id])
+  supplierId   Int?
+}
+
+model User {
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  name        String
+  password    String
+  role        String
+  permissions Permission[]
+}
+
+model Permission {
+  id       Int    @id @default(autoincrement())
+  userId   Int
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  menuItem String
 }

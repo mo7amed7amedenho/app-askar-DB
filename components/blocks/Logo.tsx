@@ -6,7 +6,7 @@ import Image from "next/image";
 const Logo = () => {
   return (
     <div
-      className="flex items-center space-x-4 p-4 bg-white dark:bg-zinc-900 
+      className="flex items-center space-x-4 p-4
  max-sm:bg-transparent rounded-lg w-full max-w-sm mx-auto"
     >
       <div className="flex-shrink-0">
