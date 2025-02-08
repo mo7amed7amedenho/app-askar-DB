@@ -18,8 +18,9 @@ import {
 } from "@heroui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import { FaPen, FaPlus, FaTrash } from "react-icons/fa";
+import { FaPlus, FaTrash } from "react-icons/fa";
 import { MENU_ITEMS } from "@/components/blocks";
+import bcrypt from "bcrypt";
 
 interface User {
   id: number;
@@ -39,7 +40,7 @@ export default function Page() {
   const [showSuccessAlert, setShowSuccessAlert] = useState<boolean>(false);
   const [showErrorAlert, setShowErrorAlert] = useState<boolean>(false);
   const [showAlertWarning, setShowAlertWarning] = useState<boolean>(false);
-  const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
+  // const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
   const [permissions, setPermissions] = useState<string[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [userToDeleteId, setUserToDeleteId] = useState<number | null>(null);
@@ -74,12 +75,19 @@ export default function Page() {
 
   const submitData = async () => {
     try {
+      const hashedPassword = await bcrypt.hash(password, 10);
       const response = await fetch("/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password, role, permissions }),
+        body: JSON.stringify({
+          name,
+          email,
+          password: hashedPassword,
+          role,
+          permissions,
+        }),
       });
 
       if (response.ok) {

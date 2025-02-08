@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Input, Checkbox, Link, Form, Divider } from "@heroui/react";
+import { Button, Input, Form, Divider } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { Logo } from "@/components/blocks";
 

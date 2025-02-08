@@ -2,6 +2,23 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      name: string;
+      email: string;
+      role: string;
+    };
+  }
+
+  interface JWT {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  }
+}
 
 const prisma = new PrismaClient();
 
@@ -10,7 +27,11 @@ const options: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email", placeholder: "user@example.com" },
+        email: {
+          label: "Email",
+          type: "email",
+          placeholder: "user@example.com",
+        },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
@@ -27,13 +48,20 @@ const options: NextAuthOptions = {
         }
 
         // التحقق من كلمة المرور
-        const isValid = await bcrypt.compare(credentials.password, user.password);
+        const isValid = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
 
         if (!isValid) {
           throw new Error("كلمة المرور غير صحيحة");
         }
 
-        return { id: user.id.toString(), name: user.name, email: user.email };
+        return {
+          id: user.id.toString(),
+          name: user.name ?? "مستخدم غير معروف", // التأكد من عدم وجود null أو undefined
+          email: user.email ?? "", // التأكد من عدم وجود null أو undefined
+        };
       },
     }),
   ],
@@ -41,16 +69,16 @@ const options: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.name = user.name;
-        token.email = user.email;
+        token.name = user.name ?? "مستخدم غير معروف"; // معالجة null أو undefined
+        token.email = user.email ?? ""; // معالجة null أو undefined
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id; // تمرير ID في الجلسة
-        session.user.name = token.name;
-        session.user.email = token.email;
+        session.user.id = token.id
+          ? (session.user.name = token.name ?? "مستخدم غير معروف") // معالجة null أو undefined
+          : (session.user.email = token.email ?? ""); // معالجة null أو undefined
       }
       return session;
     },
