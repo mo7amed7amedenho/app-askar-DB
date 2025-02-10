@@ -25,8 +25,9 @@ export default function LoginPage() {
       email,
       password,
     });
-
+    console.log(result);
     if (result?.error) {
+      console.log("خطأ في تسجيل الدخول:", result.error);
       setError("فشل تسجيل الدخول، تحقق من البريد وكلمة المرور");
     } else {
       router.push("/Home");
@@ -34,7 +35,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex items-center justify-center h-screen bg-gray-200 dark:bg-zinc-900">
+    <main className="flex items-center justify-center bg-gray-200 dark:bg-zinc-900">
       <div className="flex w-full max-w-sm flex-col gap-4 rounded-lg bg-white dark:bg-zinc-800 p-6 shadow-lg">
         <div className="flex items-center justify-center mr-7">
           <Logo />
@@ -87,7 +88,9 @@ export default function LoginPage() {
 
         <div className="flex items-center gap-4 py-2">
           <Divider className="flex-1" />
-          <p className="shrink-0 text-small text-gray-500">Made with Hamedenho</p>
+          <p className="shrink-0 text-small text-gray-500">
+            Made with Hamedenho
+          </p>
           <Divider className="flex-1" />
         </div>
       </div>

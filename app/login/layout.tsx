@@ -4,7 +4,6 @@
 import "@/styles/globals.css";
 import { fontSans } from "@/config/fonts";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
 
 export default function RootLayout({
   children,
@@ -18,7 +17,7 @@ export default function RootLayout({
       <body
         className={`${fontSans.variable} antialiased font-sans custom-scrollbar`}
       >
-        <main className="overflow-y-auto text-foreground">{children}</main>
+        <main className="flex justify-center items-center h-screen">{children}</main>
       </body>
     </html>
   );

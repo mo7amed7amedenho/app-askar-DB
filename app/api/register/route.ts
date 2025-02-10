@@ -25,7 +25,6 @@ export async function POST(req: Request) {
       );
     }
 
-   
     const newUser = await prisma.user.create({
       data: {
         name,

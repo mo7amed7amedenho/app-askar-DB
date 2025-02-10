@@ -15,7 +15,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname(); // ✅ لمعرفة الصفحة الحالية
+  const isAuthPage = pathname === "/login";
 
+  if (isAuthPage) {
+    return <>{children}</>;
+  }
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>

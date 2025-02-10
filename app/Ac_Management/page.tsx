@@ -20,7 +20,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { MENU_ITEMS } from "@/components/blocks";
-import bcrypt from "bcrypt";
 
 interface User {
   id: number;
@@ -44,7 +43,7 @@ export default function Page() {
   const [permissions, setPermissions] = useState<string[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [userToDeleteId, setUserToDeleteId] = useState<number | null>(null);
-
+  const [loading, setLoading] = useState<boolean>(true);
   const handlePermissionChange = (menuItem: string) => {
     setPermissions((prev) =>
       prev.includes(menuItem)
@@ -75,7 +74,6 @@ export default function Page() {
 
   const submitData = async () => {
     try {
-      const hashedPassword = await bcrypt.hash(password, 10);
       const response = await fetch("/api/register", {
         method: "POST",
         headers: {
@@ -84,7 +82,7 @@ export default function Page() {
         body: JSON.stringify({
           name,
           email,
-          password: hashedPassword,
+          password,
           role,
           permissions,
         }),
@@ -168,6 +166,8 @@ export default function Page() {
       } catch (error) {
         console.error("Error:", error);
       }
+
+      setLoading(false);
     };
 
     fetchUsers();
@@ -243,22 +243,26 @@ export default function Page() {
             </Select>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 my-5">
-            <label className="col-span-3">البنود المسموحة:</label>
-            {MENU_ITEMS.map((item) => (
-              <div key={item.title} className="flex items-center">
-                <CheckboxGroup>
-                  <Checkbox
-                    checked={permissions.includes(item.title)}
-                    onChange={() => handlePermissionChange(item.title)}
-                    value={item.title}
-                  >
+          <div className="my-5">
+            <label className="block font-semibold text-lg mb-2">
+              البنود المسموحة:
+            </label>
+
+            <CheckboxGroup
+              value={permissions}
+              onChange={setPermissions}
+              classNames={{ wrapper: "grid grid-cols-3 gap-4" }}
+            >
+              {MENU_ITEMS.map((item) => (
+                <div key={item.title} className="grid grid-cols-3">
+                  <Checkbox value={item.title} className="w-full">
                     {item.title}
                   </Checkbox>
-                </CheckboxGroup>
-              </div>
-            ))}
+                </div>
+              ))}
+            </CheckboxGroup>
           </div>
+
           <CardFooter className="flex justify-end">
             <Button type="submit" color="default">
               <FaPlus />
@@ -277,23 +281,51 @@ export default function Page() {
             <TableColumn>الإجراءات</TableColumn>
           </TableHeader>
           <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell className="flex gap-x-2">
-                  <Button
-                    variant="light"
-                    isIconOnly
-                    color="danger"
-                    onClick={() => handleDeleteBefore(user.id)}
-                  >
-                    <FaTrash />
-                  </Button>
+            {loading ? (
+              // ✅ تكرار 3 صفوف من Skeleton أثناء التحميل
+              [...Array(3)].map((_, index) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    <div className="h-6 w-24 bg-gray-300 rounded-md animate-pulse"></div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="h-6 w-32 bg-gray-300 rounded-md animate-pulse"></div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="h-6 w-20 bg-gray-300 rounded-md animate-pulse"></div>
+                  </TableCell>
+                  <TableCell className="flex gap-x-2">
+                    <div className="h-8 w-8 bg-gray-300 rounded-full animate-pulse"></div>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : users.length > 0 ? (
+              // ✅ عرض البيانات عند اكتمال التحميل
+              users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  <TableCell className="flex gap-x-2">
+                    <Button
+                      variant="light"
+                      isIconOnly
+                      color="danger"
+                      onClick={() => handleDeleteBefore(user.id)}
+                    >
+                      <FaTrash />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              // ✅ عرض رسالة في حالة عدم وجود بيانات
+              <TableRow>
+                <TableCell colSpan={4} className="text-center">
+                  لا يوجد مستخدمون متاحون
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </Card>

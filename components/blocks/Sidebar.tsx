@@ -1,279 +1,133 @@
 "use client";
 import Link from "next/link";
 import { LuAlignJustify } from "react-icons/lu";
-import { IoMdClose } from "react-icons/io";
-
+import { IoMdClose, IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useEffect, useState } from "react";
 import Logo from "./Logo";
-import {
-  FaHome,
-  FaWallet,
-  FaUsers,
-  FaHandHolding,
-  FaBoxes,
-  FaTools,
-  FaProjectDiagram,
-  FaCog,
-  FaUserShield,
-  FaFileInvoice,
-  FaPlus,
-  FaUserEdit,
-  FaCalendarCheck,
-  FaChartLine,
-  FaBoxOpen,
-  FaWrench,
-  FaTrash,
-  FaClipboardList,
-  FaCoins,
-  FaGift,
-} from "react-icons/fa";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { FaBoxesPacking } from "react-icons/fa6";
-
+import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { GiClothes } from "react-icons/gi";
-
-// قائمة التكوين
-const MENU_ITEMS = [
-  {
-    title: "الصفحة الرئيسية",
-    icon: FaHome,
-    link: "/Home",
-    subItems: [],
-  },
-  {
-    title: "إدارة الحسابات",
-    icon: FaWallet,
-    link: "#",
-    subItems: [
-      { title: "المصاريف اليومية", icon: FaFileInvoice, link: "/A/A" },
-      { title: "سند صرف سلفة", icon: FaCoins, link: "/A/B" },
-      { title: "سند صرف الراتب", icon: FaClipboardList, link: "/A/C" },
-      // { title: "مصروفات صيانة", icon: FaWrench, link: "/A/D" },
-      { title: "إضافة خصومات", icon: FaPlus, link: "/A/E" },
-      { title: "إضافة مكافآت", icon: FaGift, link: "/A/F" },
-      { title: "تقارير المصاريف اليومية", icon: FaChartLine, link: "/A/G" },
-      {
-        title: "تقارير المصاريف اليومية خلال مدة",
-        icon: FaChartLine,
-        link: "/A/H",
-      },
-      { title: "تقارير صرف سلف خلال مدة", icon: FaChartLine, link: "/A/I" },
-      { title: "تقارير صرف سلفه لعامل", icon: FaChartLine, link: "/A/J" },
-      { title: "تقارير الرواتب خلال مدة", icon: FaChartLine, link: "/A/K" },
-      // { title: "تقارير مصروفات صيانه", icon: FaChartLine, link: "/A/L" },
-    ],
-  },
-  {
-    title: "إدارة العمال",
-    icon: FaUsers,
-    link: "#",
-    subItems: [
-      { title: "إضافة عامل", icon: FaPlus, link: "/B/A" },
-      { title: "تعديل بيانات عامل", icon: FaUserEdit, link: "/B/B" },
-      { title: "تقارير بيانات العمال", icon: FaUserEdit, link: "/B/C" },
-      { title: "الحضور والإنصراف", icon: FaCalendarCheck, link: "/B/D" },
-      { title: "تقارير الحضور والإنصراف", icon: FaChartLine, link: "/B/E" },
-    ],
-  },
-  {
-    title: "إدارة العهدة",
-    icon: FaHandHolding,
-    link: "#",
-    subItems: [
-      { title: "إدارة العهد", icon: FaBoxOpen, link: "/C/A" },
-      { title: "إضافة عهدة جديدة", icon: FaPlus, link: "/C/B" },
-      { title: "تعديل بيانات عهدة", icon: FaUserEdit, link: "/C/C" },
-      { title: "تقارير عهدة", icon: FaChartLine, link: "/C/D" },
-      // { title: "تقارير عهدة المؤرشفة", icon: FaArchive, link: "#" },
-    ],
-  },
-  {
-    title: "إدارة الموردين",
-    icon: FaBoxesPacking,
-    link: "#",
-    subItems: [
-      { title: "إضافة مورد جديد", icon: FaBoxOpen, link: "/G/A" },
-      { title: "تعديل بيانات مورد", icon: FaPlus, link: "/G/B" },
-      { title: "إنشاء فاتورة مورد", icon: FaChartLine, link: "/G/D" },
-      { title: "تقارير الموردين", icon: FaChartLine, link: "/G/C" },
-      // { title: "تقارير عهدة المؤرشفة", icon: FaArchive, link: "#" },
-    ],
-  },
-  {
-    title: "إدارة المستهلكات",
-    icon: FaBoxes,
-    link: "#",
-    subItems: [
-      { title: "إدارة المستهلكات", icon: FaBoxes, link: "/D/A" },
-      { title: "صرف من المخزون", icon: FaChartLine, link: "/D/E" },
-      { title: "إضافة مستهلك جديد", icon: FaPlus, link: "/D/B" },
-      { title: "تعديل بيانات مستهلك", icon: FaUserEdit, link: "/D/C" },
-      { title: "تقارير المستهلكات", icon: FaChartLine, link: "/D/D" },
-      // { title: "تقارير المستهلكات قرب النفاد", icon: FaArchive, link: "#" },
-    ],
-  },
-  {
-    title: "إدارة المعدات",
-    icon: FaTools,
-    link: "#",
-    subItems: [
-      // { title: "إدارة المعدات", icon: FaToolbox, link: "#" },
-      { title: "إضافة عدة جديد", icon: FaPlus, link: "/E/A" },
-      { title: "تعديل بيانات عدة", icon: FaUserEdit, link: "/E/B" },
-      { title: "صرف من المخزون", icon: FaPlus, link: "/E/F" },
-      { title: "إسترجاع الى المخزون", icon: FaPlus, link: "/E/G" },
-      { title: "مصروفات صيانة", icon: FaWrench, link: "/A/D" },
-      { title: "إضافة عدة الى الصيانه", icon: FaWrench, link: "/E/C" },
-      { title: "إضافة عدة الى الهوالك", icon: FaTrash, link: "/E/D" },
-      { title: "تقارير المعدات", icon: FaChartLine, link: "/E/E" },
-      { title: "تقارير مصروفات صيانه", icon: FaChartLine, link: "/A/L" },
-    ],
-  },
-  {
-    title: "إدارة المهمات",
-    icon: GiClothes,
-    link: "#",
-    subItems: [
-      // { title: "إدارة المعدات", icon: FaToolbox, link: "#" },
-      { title: "إضافة وحدة جديدة", icon: FaPlus, link: "/H/A" },
-      // { title: "تعديل بيانات وحده", icon: FaUserEdit, link: "/H/B" },
-      { title: "صرف من المخزون", icon: FaPlus, link: "/H/C" },
-      { title: "تقارير المخزون", icon: FaChartLine, link: "/H/D" },
-      { title: "تقارير إستلام عمال", icon: FaChartLine, link: "/H/E" },
-    ],
-  },
-  {
-    title: "إدارة المشاريع",
-    icon: FaProjectDiagram,
-    link: "#",
-    subItems: [
-      { title: "إدارة المشاريع", icon: FaProjectDiagram, link: "/F/A" },
-      { title: "إضافة مشروع جديدة", icon: FaPlus, link: "/F/B" },
-      { title: "تعديل بيانات مشروع", icon: FaUserEdit, link: "/F/C" },
-      { title: "إضافة مصروف", icon: FaFileInvoice, link: "/F/D" },
-      { title: "تقارير مشروع ", icon: FaChartLine, link: "/F/E" },
-      // { title: "تقارير مشروع مؤرشفة", icon: FaArchive, link: "#" },
-    ],
-  },
-  // {
-  //   title: "حذف بيانات",
-  //   icon: FaTrash,
-  //   link: "#",
-  //   subItems: [
-  //     { title: "", icon: FaProjectDiagram, link: "/F/A" },
-  //     { title: "إضافة مشروع جديدة", icon: FaPlus, link: "/F/B" },
-  //     { title: "تعديل بيانات مشروع", icon: FaUserEdit, link: "/F/C" },
-  //     { title: "إضافة مصروف", icon: FaFileInvoice, link: "/F/D" },
-  //     { title: "تقارير مشروع ", icon: FaChartLine, link: "/F/E" },
-  //     // { title: "تقارير مشروع مؤرشفة", icon: FaArchive, link: "#" },
-  //   ],
-  // },
-  {
-    title: "الإعدادات",
-    icon: FaCog,
-    link: "#",
-    subItems: [],
-  },
-  {
-    title: "إدارة المستخدمين",
-    icon: FaUserShield,
-    link: "/Ac_Management",
-    subItems: [],
-  },
-];
+import { MENU_ITEMS } from "@/components/blocks";
 
 const Sidebar = () => {
   const [sidebarToggled, setSidebarToggled] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [allowedMenuItems, setAllowedMenuItems] = useState<string[]>([]);
   const pathname = usePathname();
-  const toggleMenu = (menuTitle: string) => {
-    setOpenMenu(openMenu === menuTitle ? null : menuTitle);
-  };
+  const { data: session } = useSession();
+
+  useEffect(() => setSidebarToggled(false), [pathname]);
+
   useEffect(() => {
-    setSidebarToggled(false);
-  }, [pathname]);
+    if (session?.user?.id) {
+      fetch(`/api/userMenu?userId=${session.user.id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("🚀 Allowed Menu Items:", data.allowedMenu); // التأكد من البيانات المسترجعة
+          setAllowedMenuItems(data.allowedMenu);
+        })
+        .catch((error) =>
+          console.error("❌ Error fetching menu items:", error)
+        );
+    }
+  }, [session]);
+
+  console.log("📋 Original Menu Items:", MENU_ITEMS);
+  const filteredMenu =
+    allowedMenuItems.length === 0
+      ? MENU_ITEMS // إذا لم تكن هناك بيانات، عرض كل القائمة
+      : MENU_ITEMS.filter((item) => {
+          const isMainItemAllowed = allowedMenuItems.includes(item.link);
+          const allowedSubItems = item.subItems.filter((subItem) =>
+            allowedMenuItems.includes(subItem.link)
+          );
+
+          return isMainItemAllowed || allowedSubItems.length > 0;
+        }).map((item) => ({
+          ...item,
+          subItems: item.subItems.filter((subItem) =>
+            allowedMenuItems.includes(subItem.link)
+          ),
+        }));
+
   return (
     <>
-      {/* Sidebar */}
       <aside
         dir="rtl"
         className={`fixed top-0 right-0 z-50 h-screen w-72 bg-white dark:bg-zinc-900 dark:text-white shadow-xl transform transition-transform duration-300 ease-in-out overflow-y-auto ${
           sidebarToggled ? "translate-x-0" : "translate-x-full"
         } lg:static lg:translate-x-0`}
       >
-        {/* Logo Section */}
-        <div className="border-b dark:border-b-zinc-700">
-          <Link href="#" className="flex items-center gap-3 p-4">
+        <div className="border-b dark:border-b-zinc-700 p-4">
+          <Link href="#" className="flex items-center gap-3">
             <Logo />
           </Link>
         </div>
 
-        {/* Navigation Menu */}
         <nav className="p-4 space-y-2 text-zinc-700 dark:text-white">
-          {MENU_ITEMS.map((item) => (
-            <div key={item.title} className="group">
-              {item.subItems.length > 0 ? (
-                <>
-                  {/* Parent Item with Submenu */}
-                  <button
-                    onClick={() => toggleMenu(item.title)}
-                    className="flex items-center justify-between w-full p-3 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 dark:text-white transition duration-300 text-zinc-800 hover:text-blue-800"
-                  >
-                    <div className="flex items-center gap-3">
-                      <item.icon className="text-xl text-blue-600 dark:text-white" />
-                      <span>{item.title}</span>
+          {filteredMenu.length === 0 ? (
+            <p className="text-center text-gray-500">لا توجد عناصر متاحة</p>
+          ) : (
+            filteredMenu.map((item) => (
+              <div key={item.title}>
+                {item.subItems.length > 0 ? (
+                  <>
+                    <button
+                      onClick={() =>
+                        setOpenMenu(openMenu === item.title ? null : item.title)
+                      }
+                      className="flex items-center justify-between w-full p-3 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition duration-300"
+                    >
+                      <div className="flex items-center gap-3">
+                        <item.icon className="text-xl text-blue-600" />
+                        <span>{item.title}</span>
+                      </div>
+                      {openMenu === item.title ? (
+                        <IoIosArrowUp className="text-xl" />
+                      ) : (
+                        <IoIosArrowDown className="text-xl" />
+                      )}
+                    </button>
+                    <div
+                      className={`overflow-hidden transition-all duration-300 ${
+                        openMenu === item.title ? "max-h-96" : "max-h-0"
+                      }`}
+                    >
+                      <div className="ml-4 pl-2 border-r dark:border-zinc-500 space-y-2 py-2">
+                        {item.subItems.map((subItem) => (
+                          <Link
+                            key={subItem.title}
+                            href={subItem.link}
+                            className="block p-2 text-sm hover:bg-blue-200 dark:hover:bg-blue-600 transition duration-300"
+                          >
+                            {subItem.title}
+                          </Link>
+                        ))}
+                      </div>
                     </div>
-                    {openMenu === item.title ? (
-                      <IoIosArrowUp className="text-xl" />
-                    ) : (
-                      <IoIosArrowDown className="text-xl" />
-                    )}
-                  </button>
-                  {/* Submenu */}
-                  <div
-                    className={`overflow-hidden transition-all duration-300 ${
-                      openMenu === item.title ? "max-h-[1000px]" : "max-h-0"
-                    }`}
+                  </>
+                ) : (
+                  <Link
+                    href={item.link}
+                    className="flex items-center p-3 gap-3 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition duration-300"
                   >
-                    <div className="ml-4 pl-2 border-r dark:border-zinc-500 space-y-2 py-2">
-                      {item.subItems.map((subItem) => (
-                        <Link
-                          key={subItem.title}
-                          href={subItem.link}
-                          className="flex items-center border-b dark:border-zinc-700 p-2 gap-2 text-sm hover:bg-blue-200 dark:hover:bg-blue-600 dark:text-white transition duration-300"
-                        >
-                          {/* <subItem.icon className="text-blue-600" /> */}
-                          <span>{subItem.title}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              ) : (
-                // Single Item (No Submenu)
-                <Link
-                  href={item.link}
-                  className="flex items-center p-3 gap-3 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 dark:text-white transition duration-300 text-zinc-800 hover:text-blue-800"
-                >
-                  <item.icon className="text-xl text-blue-600 dark:text-white" />
-                  <span>{item.title}</span>
-                </Link>
-              )}
-            </div>
-          ))}
+                    <item.icon className="text-xl text-blue-600" />
+                    <span>{item.title}</span>
+                  </Link>
+                )}
+              </div>
+            ))
+          )}
         </nav>
       </aside>
 
-      {/* Mobile Toggle Button */}
       <button
         onClick={() => setSidebarToggled(!sidebarToggled)}
-        className="lg:hidden fixed bottom-8 left-8 p-3 rounded-full shadow-md z-50 bg-gradient-to-r from-blue-600 to-blue-800 text-white flex items-center justify-center hover:bg-blue-700 transition-colors duration-300"
+        className="lg:hidden fixed bottom-8 left-8 p-3 rounded-full shadow-md z-50 bg-blue-700 text-white hover:bg-blue-800 transition duration-300"
       >
         {sidebarToggled ? (
-          <IoMdClose className="text-2xl" /> // أيقونة "X" عند الفتح
+          <IoMdClose className="text-2xl" />
         ) : (
-          <LuAlignJustify className="text-2xl" /> // أيقونة القائمة عند الإغلاق
+          <LuAlignJustify className="text-2xl" />
         )}
       </button>
     </>

@@ -1,14 +1,11 @@
-// 'use client' لتحديد أنه مكون عميل
-'use client'
+"use client";
 
+import { signOut } from "next-auth/react";
 import { BiLogOutCircle } from "react-icons/bi";
-import { useRouter } from "next/navigation";
 
 const LogoutButton = () => {
-  const router = useRouter();
-
   const handleLogout = async () => {
-    router.push("/login"); // إعادة التوجيه إلى صفحة تسجيل الدخول بعد الخروج
+    await signOut({ callbackUrl: "/login" }); // تسجيل الخروج وإعادة التوجيه
   };
 
   return (
