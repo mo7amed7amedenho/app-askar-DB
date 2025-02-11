@@ -2,35 +2,36 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  {params}: {params: {id: string}}
 ) {
   const { id } = params;
   const { name, email, password, role, permissions } = await req.json();
 
+  if (!name || !email || !password) {
+    return NextResponse.json(
+      { error: "بريد الكتروني وكلمة المرور مطلوبة" },
+      { status: 400 }
+    );
+  }
+
   try {
-    const user = await prisma.user.update({
-      where: { id: parseInt(id) },
-      data: {
-        name,
-        email,
-        password,
-        role,
-        permissions: {
-          deleteMany: {}, // حذف الأذونات القديمة
-          create: permissions?.map((permission: string) => ({
-            menuItem: permission,
-          })), // إضافة الأذونات الجديدة
-        },
-      },
+    // 🔹 تحديث بيانات المستخدم في قاعدة البيانات
+    const userUpdate = await prisma.user.update({
+      where: { id: parseInt(id, 10) }, // تأكد أن id رقم صحيح
+      data: { name, email, password, role },
     });
 
+    // ✅ إرجاع استجابة نجاح
     return NextResponse.json(
-      { message: "تم تعديل المستخدم بنجاح" },
+      { message: "تم تحديث المستخدم بنجاح", user: userUpdate },
       { status: 200 }
     );
+
   } catch (error) {
+    console.error("خطأ أثناء تحديث المستخدم:", error); // 🔴 طباعة الخطأ في السيرفر لرؤية التفاصيل
+
     return NextResponse.json(
-      { error: "حدث خطأ أثناء تعديل المستخدم" },
+      { error: "حدث خطأ أثناء تحديث المستخدم" },
       { status: 500 }
     );
   }

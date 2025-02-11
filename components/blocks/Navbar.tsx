@@ -28,7 +28,7 @@ export default function Navbar() {
           </div>
         ) : (
           <span className="text-lg font-semibold text-zinc-800 dark:text-white">
-            الرجاء تسجيل الدخول
+            خطأ فى تحميل البيانات
           </span>
         )}
       </div>

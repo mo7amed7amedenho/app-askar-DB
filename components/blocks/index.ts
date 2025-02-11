@@ -165,7 +165,7 @@ const MENU_ITEMS = [
   {
     title: "الإعدادات",
     icon: FaCog,
-    link: "#",
+    link: "/Settings",
     subItems: [],
   },
   {

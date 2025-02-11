@@ -12,41 +12,53 @@ const Sidebar = () => {
   const [sidebarToggled, setSidebarToggled] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [allowedMenuItems, setAllowedMenuItems] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
   const pathname = usePathname();
   const { data: session } = useSession();
 
+  // إغلاق السايدبار عند تغيير الصفحة
   useEffect(() => setSidebarToggled(false), [pathname]);
 
+  // جلب البنود المسموح بها للمستخدم
   useEffect(() => {
     if (session?.user?.id) {
+      setLoading(true);
       fetch(`/api/userMenu?userId=${session.user.id}`)
         .then((res) => res.json())
         .then((data) => {
-          console.log("🚀 Allowed Menu Items:", data.allowedMenu); // التأكد من البيانات المسترجعة
+          console.log("🚀 Allowed Menu Items:", data.allowedMenu);
           setAllowedMenuItems(data.allowedMenu);
         })
-        .catch((error) =>
-          console.error("❌ Error fetching menu items:", error)
-        );
+        .catch((error) => console.error("❌ Error fetching menu items:", error))
+        .finally(() => setLoading(false));
     }
   }, [session]);
 
   console.log("📋 Original Menu Items:", MENU_ITEMS);
+
+  // تصفية البنود بناءً على صلاحيات المستخدم
   const filteredMenu =
     allowedMenuItems.length === 0
-      ? MENU_ITEMS // إذا لم تكن هناك بيانات، عرض كل القائمة
+      ? MENU_ITEMS
       : MENU_ITEMS.filter((item) => {
-          const isMainItemAllowed = allowedMenuItems.includes(item.link);
-          const allowedSubItems = item.subItems.filter((subItem) =>
-            allowedMenuItems.includes(subItem.link)
-          );
+          const isMainItemAllowed = allowedMenuItems.includes(item.title);
+          // لو العنصر الرئيسي مسموح به، نعرض كل البنود الفرعية بدون تصفية
+          const allowedSubItems = isMainItemAllowed
+            ? item.subItems
+            : (item.subItems || []).filter((subItem) =>
+                allowedMenuItems.includes(subItem.title)
+              );
 
-          return isMainItemAllowed || allowedSubItems.length > 0;
+          return (
+            isMainItemAllowed || (allowedSubItems && allowedSubItems.length > 0)
+          );
         }).map((item) => ({
           ...item,
-          subItems: item.subItems.filter((subItem) =>
-            allowedMenuItems.includes(subItem.link)
-          ),
+          subItems: allowedMenuItems.includes(item.title)
+            ? item.subItems // نعرض البنود الفرعية كاملة لو العنصر الرئيسي مسموح به
+            : (item.subItems || []).filter((subItem) =>
+                allowedMenuItems.includes(subItem.title)
+              ),
         }));
 
   return (
@@ -64,13 +76,24 @@ const Sidebar = () => {
         </div>
 
         <nav className="p-4 space-y-2 text-zinc-700 dark:text-white">
-          {filteredMenu.length === 0 ? (
+          {loading ? (
+            // عرض مؤقت أثناء تحميل البيانات
+            <>
+              {[...Array(5)].map((_, i) => (
+                <div
+                  key={i}
+                  className="h-10 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg"
+                ></div>
+              ))}
+            </>
+          ) : filteredMenu.length === 0 ? (
             <p className="text-center text-gray-500">لا توجد عناصر متاحة</p>
           ) : (
             filteredMenu.map((item) => (
               <div key={item.title}>
                 {item.subItems.length > 0 ? (
                   <>
+                    {/* زر البند الذي يحتوي على بنود فرعية */}
                     <button
                       onClick={() =>
                         setOpenMenu(openMenu === item.title ? null : item.title)
@@ -87,6 +110,8 @@ const Sidebar = () => {
                         <IoIosArrowDown className="text-xl" />
                       )}
                     </button>
+
+                    {/* قائمة البنود الفرعية */}
                     <div
                       className={`overflow-hidden transition-all duration-300 ${
                         openMenu === item.title ? "max-h-96" : "max-h-0"
@@ -106,6 +131,7 @@ const Sidebar = () => {
                     </div>
                   </>
                 ) : (
+                  // عرض البند في حالة عدم وجود بنود فرعية
                   <Link
                     href={item.link}
                     className="flex items-center p-3 gap-3 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-800 transition duration-300"
@@ -120,6 +146,7 @@ const Sidebar = () => {
         </nav>
       </aside>
 
+      {/* زر التبديل (للعرض على الشاشات الصغيرة) */}
       <button
         onClick={() => setSidebarToggled(!sidebarToggled)}
         className="lg:hidden fixed bottom-8 left-8 p-3 rounded-full shadow-md z-50 bg-blue-700 text-white hover:bg-blue-800 transition duration-300"
