@@ -17,17 +17,18 @@ export default function ThemeSwitcher() {
 
   return (
     <Button
-      isIconOnly
       variant="flat"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
       {theme === "dark" ? (
         <div className="flex items-center gap-2">
           <IoMdSunny className="w-6 h-6 text-white" />
+          الوضع الفاتح
         </div>
       ) : (
         <div className="flex items-center gap-2">
           <IoMdMoon className="w-6 h-6 text-zinc-800" />
+          الوضع الغامق
         </div>
       )}
     </Button>

@@ -2,34 +2,48 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 export async function PUT(
   req: Request,
-  {params}: {params: {id: string}}
+  { params }: { params: { id: string } }
 ) {
   const { id } = params;
-  const { name, email, password, role, permissions } = await req.json();
+  const { name, email, currentPassword, newPassword, role } = await req.json();
 
-  if (!name || !email || !password) {
+  // تحقق من وجود الحقول الأساسية
+  if (!name || !email || !currentPassword) {
     return NextResponse.json(
-      { error: "بريد الكتروني وكلمة المرور مطلوبة" },
+      { error: "البريد الالكتروني وكلمة المرور الحالية مطلوبة" },
       { status: 400 }
     );
   }
 
+  // هنا يجب استرجاع المستخدم من قاعدة البيانات للتحقق من كلمة المرور الحالية
+  const user = await prisma.user.findUnique({
+    where: { id: parseInt(id, 10) },
+  });
+  if (!user) {
+    return NextResponse.json({ error: "المستخدم غير موجود" }, { status: 404 });
+  }
+
+  // (اختياري) التحقق من صحة كلمة المرور الحالية مثلاً باستخدام bcrypt
+  // if (!bcrypt.compareSync(currentPassword, user.password)) {
+  //   return NextResponse.json({ error: "كلمة المرور الحالية غير صحيحة" }, { status: 400 });
+  // }
+
+  // إذا لم يُدخل المستخدم كلمة مرور جديدة، استخدم كلمة المرور الحالية
+  const updatedPassword = newPassword ? newPassword : user.password;
+
   try {
-    // 🔹 تحديث بيانات المستخدم في قاعدة البيانات
+    // تحديث بيانات المستخدم
     const userUpdate = await prisma.user.update({
-      where: { id: parseInt(id, 10) }, // تأكد أن id رقم صحيح
-      data: { name, email, password, role },
+      where: { id: parseInt(id, 10) },
+      data: { name, email, password: updatedPassword, role },
     });
 
-    // ✅ إرجاع استجابة نجاح
     return NextResponse.json(
       { message: "تم تحديث المستخدم بنجاح", user: userUpdate },
       { status: 200 }
     );
-
   } catch (error) {
-    console.error("خطأ أثناء تحديث المستخدم:", error); // 🔴 طباعة الخطأ في السيرفر لرؤية التفاصيل
-
+    console.error("خطأ أثناء تحديث المستخدم:", error);
     return NextResponse.json(
       { error: "حدث خطأ أثناء تحديث المستخدم" },
       { status: 500 }

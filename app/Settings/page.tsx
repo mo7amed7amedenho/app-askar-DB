@@ -1,9 +1,11 @@
 "use client";
-import { Button, Input, Alert, Skeleton } from "@heroui/react"; // تأكد من توفر Alert و Skeleton في مكتبتك
+import { Button, Input, Alert, Skeleton, Divider } from "@heroui/react"; // تأكد من توفر Alert و Skeleton في مكتبتك
 import { FaPen } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import ThemeSwitcher from "@/components/blocks/ThemeSwitcher";
+import { LogoutButton } from "@/components/blocks";
 
 export default function Page() {
   const { data: session, status } = useSession();
@@ -94,12 +96,12 @@ export default function Page() {
       });
       const data = await res.json();
       if (res.ok) {
-        setAlert({ type: "success", message: "✅ تم تحديث البيانات بنجاح!" });
+        setAlert({ type: "success", message: " تم تحديث البيانات بنجاح!" });
       } else {
-        setAlert({ type: "danger", message: `❌ خطأ: ${data.error}` });
+        setAlert({ type: "danger", message: ` خطأ: ${data.error}` });
       }
     } catch (error) {
-      setAlert({ type: "danger", message: "❌ حدث خطأ أثناء تحديث البيانات." });
+      setAlert({ type: "danger", message: " حدث خطأ أثناء تحديث البيانات." });
     } finally {
       setIsSubmitting(false);
     }
@@ -116,6 +118,13 @@ export default function Page() {
         إدخال كلمة المرور الحالية. إذا كنت ترغب في تغيير كلمة المرور أيضًا، قم
         بإدخال كلمة المرور الجديدة وتأكيدها.
       </p>
+      <div className="flex items-center justify-center mb-6">
+        <Divider />
+        <p className="text-gray-800 dark:text-gray-300 text-nowrap px-2">
+          تعديل البيانات الرئيسية
+        </p>
+        <Divider />
+      </div>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-6 w-full">
         {/* القسم الخاص بالحقول الأساسية */}
@@ -138,13 +147,14 @@ export default function Page() {
               <Input
                 name="role"
                 value={formData.role}
-                isReadOnly
+                isDisabled
                 label="الوظيفة"
                 className="w-full"
               />
               <Input
                 name="email"
                 value={formData.email}
+                isDisabled
                 label="البريد الإلكتروني"
                 className="w-full"
               />
@@ -210,6 +220,24 @@ export default function Page() {
           </Button>
         </div>
       </form>
+      <div className="flex items-center justify-center mb-6">
+        <Divider />
+        <p className="text-gray-800 dark:text-gray-300 text-nowrap px-2">
+          إعدادات البرنامج الرئيسية
+        </p>
+        <Divider />
+      </div>
+      <div>
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-gray-800 dark:text-gray-300">اعدادات المظهر</p>
+            <ThemeSwitcher />
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <LogoutButton />
+          </div>
+        </div>
+      </div>
       <AnimatePresence>
         {alert && (
           <motion.div

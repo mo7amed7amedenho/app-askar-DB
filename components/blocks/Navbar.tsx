@@ -2,8 +2,8 @@
 
 import { Button, Skeleton } from "@heroui/react";
 import { useSession } from "next-auth/react";
-import LogoutButton from "./LogoutButton";
-import ThemeSwitcher from "./ThemeSwitcher";
+// import LogoutButton from "./LogoutButton";
+// import ThemeSwitcher from "./ThemeSwitcher";
 import { FaSyncAlt } from "react-icons/fa";
 
 export default function Navbar() {
@@ -37,8 +37,8 @@ export default function Navbar() {
           <span>Refresh</span>
           <FaSyncAlt />
         </Button>
-        <ThemeSwitcher />
-        <LogoutButton />
+        {/* <ThemeSwitcher />
+        <LogoutButton /> */}
       </div>
     </div>
   );
