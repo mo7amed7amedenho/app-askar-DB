@@ -125,11 +125,11 @@ export default function AddEmployeePage() {
   return (
     <div className="flex flex-col items-center justify-center space-y-3 p-4">
       {alert && <Alerts message={alert.message} color={alert.type} />}
-      <div className="bg-white dark:bg-zinc-900 shadow-lg rounded-2xl p-6 w-full max-w-lg">
+      <div className="bg-white dark:bg-zinc-900 shadow-lg rounded-2xl p-6 w-full">
         <h2 className="text-2xl font-semibold text-center dark:text-white text-zinc-800 mb-6">
           تعديل بيانات عامل
         </h2>
-        <Form className="space-y-4" onSubmit={handleSubmit}>
+        <Form className="grid grid-cols-1 md:grid-cols-2" onSubmit={handleSubmit}>
           <Autocomplete
             label="اسم العامل"
             variant="underlined"
