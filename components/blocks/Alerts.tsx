@@ -4,7 +4,7 @@ import React from "react";
 
 interface AlertProps {
   message: string;
-  color: "primary" | "secondary" | "success" | "warning" | "danger";
+  color: "default" | "primary" | "secondary" | "success" | "warning" | "danger" | undefined;
 }
 
 export default function Alerts({ message, color }: AlertProps) {
