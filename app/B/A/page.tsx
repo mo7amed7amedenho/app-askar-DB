@@ -77,7 +77,7 @@ export default function AddEmployeePage() {
         {/* عرض التنبيه إذا كان هناك رسالة */}
         {alert && <Alerts message={alert.message} color={alert.type} />}
 
-        <Form className="space-y-6" onSubmit={handleSubmit}>
+        <Form className="space-y-6 grid grid-cols-1 md:grid-cols-2 gap-4" onSubmit={handleSubmit}>
           <Input
             isRequired
             variant="underlined"

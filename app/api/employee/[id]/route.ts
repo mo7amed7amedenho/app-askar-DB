@@ -1,11 +1,10 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-// تحديث بيانات الموظف
 export async function PUT(req: NextRequest) {
   try {
     const urlParts = req.url.split("/");
-    const id = Number(urlParts[urlParts.length - 1]); // استخراج ID الموظف
+    const id = Number(urlParts[urlParts.length - 1]);
 
     if (isNaN(id)) {
       return NextResponse.json(
@@ -29,11 +28,11 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-// حذف موظف معين
+
 export async function DELETE(req: NextRequest) {
   try {
     const urlParts = req.url.split("/");
-    const id = Number(urlParts[urlParts.length - 1]); // استخراج ID الموظف
+    const id = Number(urlParts[urlParts.length - 1]);
 
     if (isNaN(id)) {
       return NextResponse.json(
