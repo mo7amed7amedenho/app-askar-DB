@@ -11,13 +11,15 @@ import {
   TableHeader,
   TableRow,
 } from "@heroui/react";
+import Link from "next/link";
 import React, { useState, useMemo, useEffect } from "react";
 import { FaPrint, FaSearch } from "react-icons/fa";
+import { TbPencil, TbTrash } from "react-icons/tb";
 interface DataTableProps {
   id: number;
   name: string;
-  job: string;
-  salary: number;
+  jobTitle: string;
+  dailySalary: number;
   status: string;
 }
 
@@ -45,7 +47,7 @@ export default function Page() {
   // تصفية البيانات حسب البحث
   const filteredData = useMemo(() => {
     return data.filter((user: DataTableProps) => {
-      const textToSearch = `${user.name} ${user.job}`
+      const textToSearch = `${user.name} ${user.jobTitle}`
         .normalize("NFD")
         .replace(/[\u064B-\u065F]/g, "")
         .toLowerCase();
@@ -179,8 +181,8 @@ export default function Page() {
                 <tr>
                   <td>${index + 1}</td>
                   <td>${data.name}</td>
-                  <td>${data.job}</td>
-                  <td>${data.salary} جنيه</td>                
+                  <td>${data.jobTitle}</td>
+                  <td>${data.dailySalary} جنيه</td>                
                 </tr>
               `
                 )
@@ -243,11 +245,15 @@ export default function Page() {
               <TableColumn>الاسم</TableColumn>
               <TableColumn>الوظيفة</TableColumn>
               <TableColumn>الراتب</TableColumn>
+              <TableColumn>الإجرءات</TableColumn>
             </TableHeader>
             {loading ? (
               <TableBody>
                 {Array.from({ length: 10 }).map((_, index) => (
                   <TableRow key={index}>
+                    <TableCell>
+                      <Skeleton className="h-2" />
+                    </TableCell>
                     <TableCell>
                       <Skeleton className="h-2" />
                     </TableCell>
@@ -275,8 +281,18 @@ export default function Page() {
                   <TableRow key={user.id}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{user.name}</TableCell>
-                    <TableCell>{user.job}</TableCell>
-                    <TableCell>{user.salary} جنيه</TableCell>
+                    <TableCell>{user.jobTitle}</TableCell>
+                    <TableCell>{user.dailySalary} جنيه</TableCell>
+                    <TableCell className="flex gap-x-2 max-w-[40px]">
+                      <Link href={`/B/C/${user.id}`}>
+                        <Button isIconOnly variant="light" color="primary">
+                          <TbPencil className="w-5 h-5" />
+                        </Button>
+                      </Link>
+                      <Button isIconOnly variant="light" color="danger">
+                        <TbTrash className="w-5 h-5" />
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

@@ -11,6 +11,13 @@ import {
   AutocompleteItem,
 } from "@heroui/react";
 
+interface Employee {
+  id: string;
+  name: string;
+  job: string;
+  salary: number;
+  status: string;
+}
 export default function AttendancePage() {
   const [attendanceData, setAttendanceData] = useState({
     employeeId: "",
@@ -20,24 +27,26 @@ export default function AttendancePage() {
     normalHours: 0,
     overtimeHours: 0,
   });
-  const [dataEmployee, setDataEmployee] = useState([]);
+  const [dataEmployee, setDataEmployee] = useState<Employee[]>([]);
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
         const res = await fetch("/api/employee");
         const data = await res.json();
-        setAttendanceData((prev) => ({
-          ...prev,
-          employeeId: data[0].id,
-        }));
+        if (data.length > 0) {
+          setAttendanceData((prev) => ({
+            ...prev,
+            employeeId: data[0].id,
+          }));
+        }
         setDataEmployee(data);
       } catch (error) {
         console.error("Failed to fetch employees:", error);
       }
     };
     fetchEmployees();
-  }, [dataEmployee]);
-   
+  }, []);
+
   const calculateHours = () => {
     if (!attendanceData.checkIn || !attendanceData.checkOut) return;
 
@@ -82,9 +91,19 @@ export default function AttendancePage() {
                 })
               }
             >
-              <AutocompleteItem key="1">{dataEmployee[0].name}</AutocompleteItem>
-              
+              {dataEmployee.length > 0 ? (
+                dataEmployee.map((emp) => (
+                  <AutocompleteItem key={emp.id} value={emp.id}>
+                    {emp.name}
+                  </AutocompleteItem>
+                ))
+              ) : (
+                <AutocompleteItem key="loading" isDisabled>
+                  جاري التحميل...
+                </AutocompleteItem>
+              )}
             </Autocomplete>
+
             <div className="grid grid-cols-3 gap-4">
               <Input
                 label="التاريخ"

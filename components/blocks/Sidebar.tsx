@@ -79,10 +79,10 @@ const Sidebar = () => {
           {loading ? (
             // عرض مؤقت أثناء تحميل البيانات
             <>
-              {[...Array(5)].map((_, i) => (
+              {[...Array(22)].map((_, i) => (
                 <div
                   key={i}
-                  className="h-10 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg"
+                  className="h-5 bg-gray-200 space-y-3 dark:bg-gray-700 animate-pulse rounded-lg"
                 ></div>
               ))}
             </>

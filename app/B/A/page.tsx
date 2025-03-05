@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Input, Form } from "@heroui/react";
+import { Button, Input, Form, Spinner } from "@heroui/react";
 import Alerts from "@/components/blocks/Alerts";
+import { BiSave } from "react-icons/bi";
 
 export default function AddEmployeePage() {
   const [employeeData, setEmployeeData] = useState({
@@ -140,16 +141,18 @@ export default function AddEmployeePage() {
               setEmployeeData({ ...employeeData, phoneNumber: e.target.value })
             }
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Button
               type="submit"
               color="primary"
-              className="w-full py-3 text-lg font-medium"
+              className="max-w-fit py-3 text-md font-medium col-span-3"
+              isLoading={isSubmitting}
               isDisabled={isSubmitting} // تعطيل الزر أثناء الإرسال
             >
+              {isSubmitting ? <Spinner /> : <BiSave />}
               {isSubmitting ? "جارٍ الحفظ..." : "حفظ"}
             </Button>
-            <Button
+            {/* <Button
               type="reset"
               color="danger"
               className="w-full py-3 text-lg font-medium"
@@ -164,7 +167,7 @@ export default function AddEmployeePage() {
               }
             >
               مسح البيانات
-            </Button>
+            </Button> */}
           </div>
         </Form>
       </div>

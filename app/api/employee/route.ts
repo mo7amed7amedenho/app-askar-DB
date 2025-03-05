@@ -25,7 +25,17 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   try {
-    const employees = await prisma.employee.findMany();
+    const employees = await prisma.employee.findMany({
+      select: {
+        id: true,
+        name: true,
+        jobTitle: true,
+        nationalId: true,
+        phoneNumber: true,
+        dailySalary: true,
+      },
+    });
+    console.log(employees);
     return NextResponse.json(employees, { status: 200 });
   } catch (error) {
     console.error("Database Error:", error);
