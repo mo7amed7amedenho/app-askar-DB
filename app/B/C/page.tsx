@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   Input,
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -10,53 +11,40 @@ import {
   TableHeader,
   TableRow,
 } from "@heroui/react";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { FaPrint, FaSearch } from "react-icons/fa";
-
-// بيانات الجدول
-const data = [
-  { id: 1, name: "محمد أحمد", job: "مهندس مدني", salary: 300, status: "نشط" },
-  { id: 2, name: "أحمد علي", job: "سباك", salary: 250, status: "غير نشط" },
-  { id: 3, name: "سارة محمود", job: "محاسبة", salary: 400, status: "نشط" },
-  { id: 4, name: "ياسين خالد", job: "كهربائي", salary: 270, status: "غير نشط" },
-  {
-    id: 5,
-    name: "ليلى إبراهيم",
-    job: "مصممة جرافيك",
-    salary: 350,
-    status: "نشط",
-  },
-  { id: 6, name: "خالد يوسف", job: "حداد", salary: 280, status: "نشط" },
-  { id: 7, name: "مروان سامي", job: "نجار", salary: 260, status: "غير نشط" },
-  {
-    id: 8,
-    name: "هند عصام",
-    job: "مهندسة معمارية",
-    salary: 500,
-    status: "نشط",
-  },
-  {
-    id: 9,
-    name: "يوسف علاء",
-    job: "عامل بناء",
-    salary: 220,
-    status: "غير نشط",
-  },
-  {
-    id: 10,
-    name: "منى فاروق",
-    job: "مديرة مشاريع",
-    salary: 600,
-    status: "نشط",
-  },
-];
+interface DataTableProps {
+  id: number;
+  name: string;
+  job: string;
+  salary: number;
+  status: string;
+}
 
 export default function Page() {
   const [filterValue, setFilterValue] = useState("");
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch("/api/employee");
+        const data = await res.json();
+        setData(data);
+      } catch (error) {
+        console.error("Failed to fetch employees:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
 
   // تصفية البيانات حسب البحث
   const filteredData = useMemo(() => {
-    return data.filter((user) => {
+    return data.filter((user: DataTableProps) => {
       const textToSearch = `${user.name} ${user.job}`
         .normalize("NFD")
         .replace(/[\u064B-\u065F]/g, "")
@@ -69,8 +57,7 @@ export default function Page() {
 
       return textToSearch.includes(searchNormalized);
     });
-  }, [filterValue]);
-
+  }, [filterValue, data]);
   const handlePrint = () => {
     const printWindow = window.open("", "PRINT", "width=800,height=600");
     if (printWindow) {
@@ -182,20 +169,18 @@ export default function Page() {
                 <th>ID</th>
                 <th>اسم العامل</th>
                 <th>الوظيفة</th>
-                <th>اليومية</th>
-                <th>الحالة</th>
+                <th>اليومية</th>             
               </tr>
             </thead>
             <tbody>
               ${filteredData
                 .map(
-                  (data) => `
+                  (data: DataTableProps, index) => `
                 <tr>
-                  <td>${data.id}</td>
+                  <td>${index + 1}</td>
                   <td>${data.name}</td>
                   <td>${data.job}</td>
-                  <td>${data.salary} جنيه</td>
-                  <td>${data.status}</td>
+                  <td>${data.salary} جنيه</td>                
                 </tr>
               `
                 )
@@ -258,32 +243,44 @@ export default function Page() {
               <TableColumn>الاسم</TableColumn>
               <TableColumn>الوظيفة</TableColumn>
               <TableColumn>الراتب</TableColumn>
-              <TableColumn className="text-center">الحالة</TableColumn>
             </TableHeader>
-
-            <TableBody
-              emptyContent={
-                <div className="py-4 text-center text-gray-500">
-                  لا توجد نتائج مطابقة
-                </div>
-              }
-            >
-              {filteredData.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>{user.id}</TableCell>
-                  <TableCell>{user.name}</TableCell>
-                  <TableCell>{user.job}</TableCell>
-                  <TableCell>{user.salary} جنيه</TableCell>
-                  <TableCell
-                    className={`text-white w-[80px] text-center ${
-                      user.status === "نشط" ? "bg-green-800" : "bg-red-800"
-                    }`}
-                  >
-                    {user.status}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+            {loading ? (
+              <TableBody>
+                {Array.from({ length: 10 }).map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Skeleton className="h-2" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-2" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-2" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-2" />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            ) : (
+              <TableBody
+                emptyContent={
+                  <div className="py-4 text-center text-gray-500">
+                    لا توجد نتائج مطابقة
+                  </div>
+                }
+              >
+                {filteredData.map((user: DataTableProps, index) => (
+                  <TableRow key={user.id}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{user.name}</TableCell>
+                    <TableCell>{user.job}</TableCell>
+                    <TableCell>{user.salary} جنيه</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            )}
           </Table>
         </div>
       </Card>

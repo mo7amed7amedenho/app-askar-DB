@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Input,
@@ -20,7 +20,24 @@ export default function AttendancePage() {
     normalHours: 0,
     overtimeHours: 0,
   });
-
+  const [dataEmployee, setDataEmployee] = useState([]);
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const res = await fetch("/api/employee");
+        const data = await res.json();
+        setAttendanceData((prev) => ({
+          ...prev,
+          employeeId: data[0].id,
+        }));
+        setDataEmployee(data);
+      } catch (error) {
+        console.error("Failed to fetch employees:", error);
+      }
+    };
+    fetchEmployees();
+  }, [dataEmployee]);
+   
   const calculateHours = () => {
     if (!attendanceData.checkIn || !attendanceData.checkOut) return;
 
@@ -65,9 +82,8 @@ export default function AttendancePage() {
                 })
               }
             >
-              <AutocompleteItem key="1">John Doe</AutocompleteItem>
-              <AutocompleteItem key="2">Jane Smith</AutocompleteItem>
-              <AutocompleteItem key="3">Alice Johnson</AutocompleteItem>
+              <AutocompleteItem key="1">{dataEmployee[0].name}</AutocompleteItem>
+              
             </Autocomplete>
             <div className="grid grid-cols-3 gap-4">
               <Input
