@@ -10,7 +10,7 @@ const Logo = () => {
  max-sm:bg-transparent rounded-lg w-full max-w-sm mx-auto"
     >
       <div className="flex-shrink-0">
-        <Image src="/logo.png" width={100} height={100} alt="logo" />
+        <Image src="/logo.webp" width={100} height={100} alt="logo" />
       </div>
       <div className="flex flex-col text-nowrap space-y-1 px-2">
         <h1 className="text-sm font-bold leading-tight text-zinc-800 dark:text-white">
