@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { Button } from "@heroui/react";
 
 type ConfirmationModalProps = {
   isOpen: boolean;
@@ -27,40 +28,47 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
       case "danger":
         return "bg-red-600 hover:bg-red-700";
       case "secondary":
-        return "bg-gray-600 hover:bg-gray-700";
+        return "bg-gray-500 hover:bg-gray-600";
       default:
-        return "bg-blue-600 hover:bg-blue-700";
+        return "bg-blue-500 hover:bg-blue-600";
     }
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-zinc-950 bg-opacity-90 z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-xl z-50">
       <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
+        initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.8 }}
+        exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className="bg-white dark:bg-zinc-900 rounded-lg shadow-2xl w-[600px] p-8 max-w-full relative"
+        className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-lg rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] w-[500px] p-6 max-w-full border border-gray-200 dark:border-gray-700"
       >
-        <h2 className="text-3xl font-bold mb-5 text-gray-900 dark:text-white">
+        {/* عنوان النافذة */}
+        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white text-center">
           {title}
         </h2>
-        <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
+
+        {/* نص الرسالة */}
+        <p className="text-md text-gray-700 dark:text-gray-300 mb-6 text-center leading-relaxed">
           {message}
         </p>
-        <div className="flex justify-end space-x-5">
-          <button
-            className="px-6 py-3 mx-5 bg-gray-400 hover:bg-gray-500 text-white rounded-xl"
+
+        {/* أزرار التحكم */}
+        <div className="flex justify-center gap-4">
+          <Button
+            className="px-6 py-2 rounded-xl text-gray-700 dark:text-gray-300 transition"
             onClick={onClose}
+            variant="bordered"
           >
             إلغاء
-          </button>
-          <button
-            className={`px-6 py-3 text-white rounded-xl ${getButtonColor()}`}
+          </Button>
+          <Button
+            className={`px-6 py-2 rounded-xl text-white ${getButtonColor()} transition`}
             onClick={onConfirm}
+            variant="shadow"
           >
             {confirmButtonText}
-          </button>
+          </Button>
         </div>
       </motion.div>
     </div>

@@ -12,9 +12,13 @@ import {
   TableRow,
 } from "@heroui/react";
 import Link from "next/link";
+import { Employee } from "@prisma/client";
 import React, { useState, useMemo, useEffect } from "react";
 import { FaPrint, FaSearch } from "react-icons/fa";
 import { TbPencil, TbTrash } from "react-icons/tb";
+import ConfirmationModal from "@/components/blocks/ConfirmationModal";
+import useSWR from "swr";
+import Alerts from "@/components/blocks/Alerts";
 interface DataTableProps {
   id: number;
   name: string;
@@ -23,26 +27,59 @@ interface DataTableProps {
   status: string;
 }
 
-export default function Page() {
-  const [filterValue, setFilterValue] = useState("");
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch("/api/employee");
-        const data = await res.json();
-        setData(data);
-      } catch (error) {
-        console.error("Failed to fetch employees:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-    fetchEmployees();
-  }, []);
+export default function Page() {
+  const { data: people, mutate, isLoading } = useSWR("/api/employee", fetcher);
+  const [alert, setAlert] = useState<{
+    message: string;
+    type:
+      | "default"
+      | "primary"
+      | "secondary"
+      | "success"
+      | "warning"
+      | "danger"
+      | undefined;
+  } | null>(null);
+
+  const [filterValue, setFilterValue] = useState("");
+  const [data] = useState([]);
+
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(
+    null
+  );
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  useEffect(() => {
+    if (people) {
+      setEmployees(people);
+    }
+  }, [people]);
+
+  const handleDelete = (id: number) => {
+    setSelectedEmployeeId(id.toString());
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      const res = await fetch(`/api/employee/${selectedEmployeeId}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setAlert({ message: "تم حذف العامل بنجاح", type: "success" });
+        await mutate(); // تحديث البيانات بعد الحذف
+      } else {
+        setAlert({ message: "فشل في حذف العامل", type: "danger" });
+      }
+    } catch (error) {
+      setAlert({ message: "خطأ في الاتصال بالخادم", type: "danger" });
+    } finally {
+      setIsDeleteModalOpen(false);
+    }
+  };
 
   // تصفية البيانات حسب البحث
   const filteredData = useMemo(() => {
@@ -212,6 +249,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col gap-y-2 p-4 pb-0">
+      {alert && <Alerts message={alert.message} color={alert.type} />}
       <Card className="flex flex-col gap-y-2 p-4">
         <div className="flex flex-col gap-y-3">
           <h1 className="text-3xl font-bold">إدارة بيانات العمال</h1>
@@ -245,61 +283,84 @@ export default function Page() {
               <TableColumn>الاسم</TableColumn>
               <TableColumn>الوظيفة</TableColumn>
               <TableColumn>الراتب</TableColumn>
-              <TableColumn>الإجرءات</TableColumn>
+              <TableColumn>الإجراءات</TableColumn>
             </TableHeader>
-            {loading ? (
+            {isLoading ? (
               <TableBody>
                 {Array.from({ length: 10 }).map((_, index) => (
                   <TableRow key={index}>
                     <TableCell>
-                      <Skeleton className="h-2" />
+                      <div className="skeleton h-2 w-full"></div>
                     </TableCell>
                     <TableCell>
-                      <Skeleton className="h-2" />
+                      <div className="skeleton h-2 w-full"></div>
                     </TableCell>
                     <TableCell>
-                      <Skeleton className="h-2" />
+                      <div className="skeleton h-2 w-full"></div>
                     </TableCell>
                     <TableCell>
-                      <Skeleton className="h-2" />
+                      <div className="skeleton h-2 w-full"></div>
                     </TableCell>
                     <TableCell>
-                      <Skeleton className="h-2" />
+                      <div className="skeleton h-2 w-full"></div>
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             ) : (
-              <TableBody
-                emptyContent={
-                  <div className="py-4 text-center text-gray-500">
-                    لا توجد نتائج مطابقة
-                  </div>
-                }
-              >
-                {filteredData.map((user: DataTableProps, index) => (
-                  <TableRow key={user.id}>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{user.name}</TableCell>
-                    <TableCell>{user.jobTitle}</TableCell>
-                    <TableCell>{user.dailySalary} جنيه</TableCell>
-                    <TableCell className="flex gap-x-2 max-w-[40px]">
-                      <Link href={`/B/C/${user.id}`}>
-                        <Button isIconOnly variant="light" color="primary">
-                          <TbPencil className="w-5 h-5" />
+              <TableBody>
+                {employees?.length ? (
+                  employees.map((user, index) => (
+                    <TableRow key={user.id}>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{user.name}</TableCell>
+                      <TableCell>{user.jobTitle}</TableCell>
+                      <TableCell>{user.dailySalary.toString()} جنيه</TableCell>
+                      <TableCell className="flex gap-x-2 max-w-[40px]">
+                        <Button
+                          isIconOnly
+                          variant="light"
+                          onClick={() => handleDelete(user.id)}
+                          color="danger"
+                        >
+                          <TbTrash className="w-5 h-5" />
                         </Button>
-                      </Link>
-                      <Button isIconOnly variant="light" color="danger">
-                        <TbTrash className="w-5 h-5" />
-                      </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell className="text-center">
+                      لا يوجد بيانات
+                    </TableCell>
+                    <TableCell className="text-center">
+                      لا يوجد بيانات
+                    </TableCell>
+                    <TableCell className="text-center">
+                      لا يوجد بيانات
+                    </TableCell>
+                    <TableCell className="text-center">
+                      لا يوجد بيانات
+                    </TableCell>
+                    <TableCell className="text-center">
+                      لا يوجد بيانات
                     </TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             )}
           </Table>
         </div>
       </Card>
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={confirmDelete}
+        title="تأكيد الحذف"
+        message="هل أنت متأكد أنك تريد حذف هذا العامل؟"
+        confirmButtonText="نعم"
+        confirmButtonColor="danger"
+      />
     </div>
   );
 }

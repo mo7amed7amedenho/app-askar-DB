@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { Skeleton } from "@heroui/react";
+import { Card, Skeleton } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
@@ -30,13 +30,26 @@ export default function Page() {
   );
 
   return (
-    <main className="mt-10 space-y-6">
-      {[...Array(2)].map((_, rowIndex) => (
-        <div key={rowIndex} className="flex flex-row space-x-3">
-          {skeletonBlocks.map((block, index) => (
-            <React.Fragment key={index}>
-              {renderSkeleton(block.count, block.className)}
-            </React.Fragment>
+    <main className="">
+      {[...Array(3)].map((_, rowIndex) => (
+        <div key={rowIndex} className="flex p-2">
+          {skeletonBlocks.map((_, index) => (
+            <Card className="w-full space-y-2 m-2 space-x-5 p-4" radius="lg" key={index}>
+              <Skeleton className="rounded-lg">
+                <div className="h-24 rounded-lg bg-secondary" />
+              </Skeleton>
+              <div className="space-y-3">
+                <Skeleton className="w-3/5 rounded-lg">
+                  <div className="h-3 w-full rounded-lg bg-secondary" />
+                </Skeleton>
+                <Skeleton className="w-4/5 rounded-lg">
+                  <div className="h-3 w-full rounded-lg bg-secondary-300" />
+                </Skeleton>
+                <Skeleton className="w-2/5 rounded-lg">
+                  <div className="h-3 w-full rounded-lg bg-secondary-200" />
+                </Skeleton>
+              </div>
+            </Card>
           ))}
         </div>
       ))}
