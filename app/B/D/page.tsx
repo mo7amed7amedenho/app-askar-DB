@@ -10,24 +10,28 @@ import {
   CardFooter,
   AutocompleteItem,
 } from "@heroui/react";
+import { FaSave } from "react-icons/fa";
+import Alerts from "@/components/blocks/Alerts";
 
 interface Employee {
   id: string;
   name: string;
   job: string;
   salary: number;
-  status: string;
 }
+
 export default function AttendancePage() {
   const [attendanceData, setAttendanceData] = useState({
     employeeId: "",
-    date: new Date().toISOString().split("T")[0], // تاريخ اليوم تلقائيًا
+    date: new Date().toISOString().split("T")[0],
     checkIn: "",
     checkOut: "",
     normalHours: 0,
     overtimeHours: 0,
+    totalTime: 0,
   });
   const [dataEmployee, setDataEmployee] = useState<Employee[]>([]);
+  const [alert, setAlert] = useState({ message: "", type: "" });
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
@@ -57,22 +61,60 @@ export default function AttendancePage() {
 
     const normalHours = Math.min(8, totalHours);
     const overtimeHours = Math.max(0, totalHours - 8);
+    const totalTime = normalHours + overtimeHours;
 
     setAttendanceData((prev) => ({
       ...prev,
       normalHours,
       overtimeHours,
+      totalTime,
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(attendanceData);
-    // هنا يمكنك إرسال البيانات إلى قاعدة البيانات مثل Supabase أو أي API
+    try {
+      const response = await fetch("/api/Attendance", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(attendanceData),
+      });
+      const data = await response.json();
+      if (data.error) {
+        setAlert({
+          message: `لم يتم تسجيل الحضور ${data.error}`,
+          type: "danger",
+        });
+      } else {
+        setAlert({
+          message: "تم تسجيل الحضور بنجاح",
+          type: "success",
+        });
+        setAttendanceData({
+          employeeId: "",
+          date: new Date().toISOString().split("T")[0],
+          checkIn: "",
+          checkOut: "",
+          normalHours: 0,
+          overtimeHours: 0,
+          totalTime: 0,
+        });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
     <div className="flex flex-col items-center justify-center pt-10">
+      {alert && (
+        <Alerts
+          message={alert.message}
+          color={alert.type as "success" | "danger"}
+        />
+      )}
       <Card className="w-full max-w-lg shadow-lg rounded-xl text-center">
         <h2 className="text-2xl font-semibold text-center text-zinc-800 dark:text-white p-5">
           تسجيل الحضور والانصراف
@@ -104,7 +146,7 @@ export default function AttendancePage() {
               )}
             </Autocomplete>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 justify-between w-full gap-4">
               <Input
                 label="التاريخ"
                 type="date"
@@ -114,7 +156,6 @@ export default function AttendancePage() {
                   setAttendanceData({ ...attendanceData, date: e.target.value })
                 }
               />
-
               <Input
                 label="وقت الحضور"
                 type="time"
@@ -126,7 +167,7 @@ export default function AttendancePage() {
                     checkIn: e.target.value,
                   })
                 }
-                onBlur={calculateHours} // احسب الساعات بعد الإدخال
+                onBlur={calculateHours}
               />
               <Input
                 label="وقت الانصراف"
@@ -143,7 +184,7 @@ export default function AttendancePage() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <Input
                 label="الساعات العادية"
                 readOnly
@@ -154,31 +195,20 @@ export default function AttendancePage() {
                 readOnly
                 value={`${attendanceData.overtimeHours} ساعات`}
               />
+              <Input
+                label="إجمالى عدد الساعات"
+                readOnly
+                value={`${attendanceData.totalTime} ساعات`}
+              />
             </div>
             <CardFooter className="flex flex-row gap-4">
               <Button
                 type="submit"
                 color="primary"
-                className="w-full py-2 text-lg font-medium"
+                className="w-1/8 py-2 text-lg rounded-lg border border-blue-950 font-medium"
+                startContent={<FaSave />}
               >
-                حفظ الحضور
-              </Button>
-              <Button
-                type="button"
-                color="danger"
-                className="w-full py-2 text-lg font-medium"
-                onClick={() =>
-                  setAttendanceData({
-                    employeeId: "",
-                    date: new Date().toISOString().split("T")[0],
-                    checkIn: "",
-                    checkOut: "",
-                    normalHours: 0,
-                    overtimeHours: 0,
-                  })
-                }
-              >
-                إعادة ضبط
+                حفظ
               </Button>
             </CardFooter>
           </Form>

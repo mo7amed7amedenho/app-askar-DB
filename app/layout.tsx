@@ -5,9 +5,10 @@ import "@/styles/globals.css";
 import { Providers } from "./providers";
 import { fontSans } from "@/config/fonts";
 import { Navbar, Sidebar } from "@/components/blocks";
-import { ThemeProvider } from "next-themes";
+
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
+import { ThemeProvider } from "@/components/blocks/theme-provider";
 
 export default function RootLayout({
   children,
@@ -26,13 +27,18 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body
-        className={`${fontSans.variable} antialiased font-sans custom-scrollbar`}
+        className={`${fontSans.variable} antialiased text-foreground font-sans custom-scrollbar`}
       >
         <SessionProvider>
-          <ThemeProvider attribute="class" defaultTheme="light">
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
             <div className="flex h-screen">
               {/* Sidebar */}
-              <div className="text-white shadow-xl shadow-blue-700">
+              <div className="shadow-xl shadow-blue-700">
                 <Sidebar />
               </div>
 

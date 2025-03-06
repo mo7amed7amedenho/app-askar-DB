@@ -19,13 +19,6 @@ import { TbPencil, TbTrash } from "react-icons/tb";
 import ConfirmationModal from "@/components/blocks/ConfirmationModal";
 import useSWR from "swr";
 import Alerts from "@/components/blocks/Alerts";
-interface DataTableProps {
-  id: number;
-  name: string;
-  jobTitle: string;
-  dailySalary: number;
-  status: string;
-}
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -44,18 +37,14 @@ export default function Page() {
   } | null>(null);
 
   const [filterValue, setFilterValue] = useState("");
-  const [data] = useState([]);
-
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(
     null
   );
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
   const [employees, setEmployees] = useState<Employee[]>([]);
+
   useEffect(() => {
-    if (people) {
-      setEmployees(people);
-    }
+    if (people) setEmployees(people);
   }, [people]);
 
   const handleDelete = (id: number) => {
@@ -68,9 +57,10 @@ export default function Page() {
       const res = await fetch(`/api/employee/${selectedEmployeeId}`, {
         method: "DELETE",
       });
+
       if (res.ok) {
         setAlert({ message: "تم حذف العامل بنجاح", type: "success" });
-        await mutate(); // تحديث البيانات بعد الحذف
+        await mutate();
       } else {
         setAlert({ message: "فشل في حذف العامل", type: "danger" });
       }
@@ -81,9 +71,8 @@ export default function Page() {
     }
   };
 
-  // تصفية البيانات حسب البحث
-  const filteredData = useMemo(() => {
-    return data.filter((user: DataTableProps) => {
+  const filteredEmployees = useMemo(() => {
+    return employees.filter((user: Employee) => {
       const textToSearch = `${user.name} ${user.jobTitle}`
         .normalize("NFD")
         .replace(/[\u064B-\u065F]/g, "")
@@ -96,7 +85,8 @@ export default function Page() {
 
       return textToSearch.includes(searchNormalized);
     });
-  }, [filterValue, data]);
+  }, [filterValue, employees]);
+
   const handlePrint = () => {
     const printWindow = window.open("", "PRINT", "width=800,height=600");
     if (printWindow) {
@@ -171,7 +161,7 @@ export default function Page() {
               color: #888;
               border-top: 1px solid #ddd;
               padding-top: 10px;
-           
+            }
             @media print {
               body {
                 padding: 10px;
@@ -193,7 +183,6 @@ export default function Page() {
           <div class="header">
             <div class="company-name">
               <h2>Askar Group for <br /> General Contracting<br />عسكر للمقاولات العمومية</h2>
-              
             </div>
             <div class="logo">
               <img src="/logo.webp" alt="Logo" />
@@ -212,9 +201,9 @@ export default function Page() {
               </tr>
             </thead>
             <tbody>
-              ${filteredData
+              ${filteredEmployees
                 .map(
-                  (data: DataTableProps, index) => `
+                  (data, index) => `
                 <tr>
                   <td>${index + 1}</td>
                   <td>${data.name}</td>
@@ -224,7 +213,6 @@ export default function Page() {
               `
                 )
                 .join("")}
-             
             </tbody>
           </table>
   
@@ -243,7 +231,7 @@ export default function Page() {
       setTimeout(() => {
         printWindow.print();
         printWindow.close();
-      }, 1000); // تأخير 1500 ميلي ثانية
+      }, 1000);
     }
   };
 
@@ -258,7 +246,6 @@ export default function Page() {
           </p>
         </div>
 
-        {/* مربع البحث */}
         <div className="flex items-center justify-between py-2">
           <Input
             isClearable
@@ -275,7 +262,6 @@ export default function Page() {
           </Button>
         </div>
 
-        {/* جدول البيانات */}
         <div className="flex flex-col gap-y-2">
           <Table aria-label="جدول بيانات العمال">
             <TableHeader>
@@ -289,28 +275,18 @@ export default function Page() {
               <TableBody>
                 {Array.from({ length: 10 }).map((_, index) => (
                   <TableRow key={index}>
-                    <TableCell>
-                      <div className="skeleton h-2 w-full"></div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="skeleton h-2 w-full"></div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="skeleton h-2 w-full"></div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="skeleton h-2 w-full"></div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="skeleton h-2 w-full"></div>
-                    </TableCell>
+                    {Array.from({ length: 5 }).map((_, cellIndex) => (
+                      <TableCell key={cellIndex}>
+                        <Skeleton className="h-4 w-full" />
+                      </TableCell>
+                    ))}
                   </TableRow>
                 ))}
               </TableBody>
             ) : (
               <TableBody>
-                {employees?.length ? (
-                  employees.map((user, index) => (
+                {filteredEmployees.length ? (
+                  filteredEmployees.map((user, index) => (
                     <TableRow key={user.id}>
                       <TableCell>{index + 1}</TableCell>
                       <TableCell>{user.name}</TableCell>
@@ -330,21 +306,11 @@ export default function Page() {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell className="text-center">
-                      لا يوجد بيانات
-                    </TableCell>
-                    <TableCell className="text-center">
-                      لا يوجد بيانات
-                    </TableCell>
-                    <TableCell className="text-center">
-                      لا يوجد بيانات
-                    </TableCell>
-                    <TableCell className="text-center">
-                      لا يوجد بيانات
-                    </TableCell>
-                    <TableCell className="text-center">
-                      لا يوجد بيانات
-                    </TableCell>
+                    {Array.from({ length: 5 }).map((_, cellIndex) => (
+                      <TableCell className="text-center">
+                        لا يوجد بيانات
+                      </TableCell>
+                    ))}
                   </TableRow>
                 )}
               </TableBody>

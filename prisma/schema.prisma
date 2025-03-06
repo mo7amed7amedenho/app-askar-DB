@@ -32,12 +32,15 @@ model Salary {
 }
 
 model Attendance {
-  id         Int       @id @default(autoincrement())
-  employee   Employee  @relation(fields: [employeeId], references: [id])
-  employeeId Int
-  date       DateTime
-  checkIn    DateTime?
-  checkOut   DateTime?
+  id            Int      @id @default(autoincrement()) // تغيير ID ليكون Int
+  employeeId    Int // تغيير نوع employeeId إلى Int
+  employee      Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  date          DateTime
+  checkIn       DateTime
+  checkOut      DateTime
+  normalHours   Float
+  overtimeHours Float
+  totalTime     Float
 }
 
 model Deduction {
