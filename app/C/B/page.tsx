@@ -1,126 +1,154 @@
 "use client";
 import React, { useState } from "react";
-import { Button, DatePicker, Input, Autocomplete, Form, AutocompleteItem } from "@heroui/react";
-import { now, getLocalTimeZone, today } from "@internationalized/date";
+import {
+  Button,
+  DatePicker,
+  Input,
+  Autocomplete,
+  Form,
+  AutocompleteItem,
+} from "@heroui/react";
+import { getLocalTimeZone, today, CalendarDate } from "@internationalized/date";
+import { FaSave } from "react-icons/fa";
+import Alerts from "@/components/blocks/Alerts";
 
 export default function AddAssetPage() {
   const [formData, setFormData] = useState({
     assetName: "",
     assetNumber: "",
-    quantity: "",
-    condition: "",
+    quantity: 0,
+    condition: "active", // تأكد أن الحالة تتوافق مع Prisma
     receiver: "",
-    dateReceived: today(getLocalTimeZone()),
+    dateReceived: today(getLocalTimeZone()) as CalendarDate,
+    projectId: null, // اضفناه لأن المشروع مرتبط
   });
 
-  // const handlePrint = () => {
-  //   const printWindow = window.open("", "window", "width=800,height=600");
-  //   if (!printWindow) {
-  //     alert("فشل فتح نافذة الطباعة. يرجى السماح للنوافذ المنبثقة.");
-  //     return;
-  //   }
-  //   printWindow.document.write(`
-  //     <html>
-  //       <head>
-  //         <title>طباعة بيانات العهدة</title>
-  //         <style>
-  //           body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-  //           .container { border: 1px solid #ddd; padding: 20px; margin: auto; width: 50%; }
-  //         </style>
-  //       </head>
-  //       <body>
-  //         <div class='container'>
-  //           <h2>بيانات العهدة</h2>
-  //           <p><strong>اسم العهدة:</strong> ${formData.assetName}</p>
-  //           <p><strong>رقم العهدة:</strong> ${formData.assetNumber}</p>
-  //           <p><strong>الكمية:</strong> ${formData.quantity}</p>
-  //           <p><strong>الحالة:</strong> ${formData.condition}</p>
-  //           <p><strong>المستلم:</strong> ${formData.receiver}</p>
-  //           <p><strong>تاريخ الاستلام:</strong> ${formData.dateReceived}</p>
-  //           <button onclick="window.print()">طباعة</button>
-  //         </div>
-  //       </body>
-  //     </html>
-  //   `);
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState<{
+    message: string;
+    type: "success" | "danger";
+  } | null>(null);
+  const custodyCreate = async () => {
+    try {
+      const res = await fetch("/api/custody", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.assetName, // تأكد من مطابقة الحقول مع Prisma
+          code: formData.assetNumber, // تأكد من إرسال `code`
+          quantity: Number(formData.quantity), // تأكد من تحويل `quantity` إلى `Number`
+          status: formData.condition,
+          projectId: formData.projectId ? Number(formData.projectId) : null, // تأكد أن `projectId` رقم أو `null`
+        }),
+      });
 
-  //   printWindow.document.close();
+      const data = await res.json();
+      if (res.ok) {
+        setAlert({ message: "تم حفظ العهدة بنجاح", type: "success" });
+        console.log("Success:", data);
+      } else {
+        setAlert({ message: data.error || "فشل في الحفظ", type: "danger" });
+        console.error("Error:", data.error);
+      }
+    } catch (error) {
+      setAlert({ message: "خطاء في الاتصال بالخادم", type: "danger" });
+      console.error("Fetch Error:", error);
+    }
+    setFormData({
+      assetName: "",
+      assetNumber: "",
+      quantity: 0,
+      condition: "active",
+      receiver: "",
+      dateReceived: today(getLocalTimeZone()) as CalendarDate,
+      projectId: null,
+    });
+  };
 
-  //   printWindow.onload = () => {
-  //     printWindow.print();
-  //   };
-
-  //   printWindow.onafterprint = () => {
-  //     printWindow.close();
-  //   };
-  // };
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    setLoading(true);
+    await custodyCreate();
+    setLoading(false);
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-3 p-4">
-      <div className="bg-white dark:bg-zinc-900 shadow-lg rounded-2xl p-6 w-full max-w-lg">
-        <h2 className="text-2xl font-semibold text-center dark:text-white text-zinc-800 mb-6">
+    <div className="flex items-center justify-center p-4">
+      {alert && <Alerts message={alert.message} color={alert.type} />}
+      <div className="w-full max-w-6xl">
+        <h2 className="text-3xl font-semibold text-zinc-800 dark:text-white mb-6">
           إضافة عهدة جديدة
         </h2>
-        <Form className="space-y-4">
-          <Input
-            label="اسم العهدة"
-            placeholder="أدخل اسم العهدة"
-            className="w-full"
-            onChange={(e) =>
-              setFormData({ ...formData, assetName: e.target.value })
-            }
-          />
-          <Input
-            label="رقم العهدة"
-            placeholder="أدخل رقم العهدة"
-            className="w-full"
-            onChange={(e) =>
-              setFormData({ ...formData, assetNumber: e.target.value })
-            }
-          />
-          <Input
-            label="الكمية"
-            type="number"
-            placeholder="0"
-            className="w-full"
-            onChange={(e) =>
-              setFormData({ ...formData, quantity: e.target.value })
-            }
-          />
+        <div className="bg-white dark:bg-zinc-900 shadow-md rounded-lg p-6">
+          <Form
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            onSubmit={handleSubmit}
+          >
+            <div className="flex flex-col gap-4">
+              <Input
+                label="اسم العهدة"
+                placeholder="أدخل اسم العهدة"
+                value={formData.assetName}
+                onChange={(e) =>
+                  setFormData({ ...formData, assetName: e.target.value })
+                }
+              />
+              <Input
+                label="رقم العهدة"
+                placeholder="أدخل رقم العهدة"
+                value={formData.assetNumber}
+                onChange={(e) =>
+                  setFormData({ ...formData, assetNumber: e.target.value })
+                }
+              />
+              <Input
+                label="الكمية"
+                type="number"
+                placeholder="0"
+                value={formData.quantity.toString()}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    quantity: parseInt(e.target.value) || 0,
+                  })
+                }
+              />
+            </div>
 
-          <Autocomplete label="تابعه لمشروع" placeholder="ابحث عن المشروع">
-            <AutocompleteItem key="1">مشروع 1</AutocompleteItem>
-          </Autocomplete>
-          <DatePicker
-            label="تاريخ الاستلام"
-            hideTimeZone
-            showMonthAndYearPickers
-            defaultValue={now(getLocalTimeZone())}
-          />
-          <div className="grid grid-cols-3 gap-4">
-            <Button
-              type="submit"
-              color="primary"
-              className="w-full py-2 text-lg font-medium"
-            >
-              حفظ
-            </Button>
-            {/* <Button
-              type="button"
-              color="success"
-              className="w-full py-2 text-lg font-medium"
-              onClick={handlePrint}
-            >
-              طباعة
-            </Button> */}
-            <Button
-              type="reset"
-              color="danger"
-              className="w-full py-2 text-lg font-medium"
-            >
-              مسح البيانات
-            </Button>
-          </div>
-        </Form>
+            <div className="flex flex-col gap-4">
+              <Autocomplete label="تابعه لمشروع" placeholder="ابحث عن المشروع">
+                <AutocompleteItem key="1">مشروع 1</AutocompleteItem>
+              </Autocomplete>
+
+              <DatePicker
+                label="تاريخ الاستلام"
+                hideTimeZone
+                showMonthAndYearPickers
+                value={formData.dateReceived}
+                onChange={(date) =>
+                  setFormData({
+                    ...formData,
+                    dateReceived: date as CalendarDate,
+                  })
+                }
+              />
+            </div>
+
+            <div className="flex justify-end w-full col-span-2">
+              <Button
+                type="submit"
+                color="primary"
+                isDisabled={!formData.assetName}
+                startContent={!loading && <FaSave />}
+                isLoading={loading}
+              >
+                حفظ
+              </Button>
+            </div>
+          </Form>
+        </div>
       </div>
     </div>
   );

@@ -1,156 +1,169 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client-js" // مزود العميل لإنشاء كود Prisma client تلقائيًا
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider = "mysql" // مزود قاعدة البيانات المستخدمة
+  url      = env("DATABASE_URL") // جلب رابط قاعدة البيانات من المتغيرات البيئية
 }
 
+// نموذج الموظف، يحتوي على معلومات الموظفين وعلاقاتهم بالكيانات الأخرى
 model Employee {
-  id          Int          @id @default(autoincrement())
-  name        String
-  jobTitle    String
-  nationalId  String       @unique
-  phoneNumber String
-  dailySalary Decimal
-  salaries    Salary[]
-  attendance  Attendance[]
-  deductions  Deduction[]
-  bonuses     Bonus[]
+  id          Int          @id @default(autoincrement()) // معرف الموظف، يتم توليده تلقائيًا
+  name        String       // اسم الموظف
+  jobTitle    String       // المسمى الوظيفي
+  nationalId  String       @unique // رقم الهوية الوطنية (يجب أن يكون فريدًا)
+  phoneNumber String       // رقم الهاتف
+  dailySalary Decimal      // الراتب اليومي
+  salaries    Salary[]     // علاقة مع جدول الرواتب
+  attendance  Attendance[] // علاقة مع جدول الحضور
+  deductions  Deduction[]  // علاقة مع جدول الخصومات
+  bonuses     Bonus[]      // علاقة مع جدول المكافآت
 }
 
+// نموذج الرواتب، يخزن بيانات الرواتب الشهرية لكل موظف
 model Salary {
-  id            Int      @id @default(autoincrement())
-  employee      Employee @relation(fields: [employeeId], references: [id])
-  employeeId    Int
-  deductions    Decimal
-  overtimeHours Int
-  totalSalary   Decimal
-  periodStart   DateTime
-  periodEnd     DateTime
+  id            Int      @id @default(autoincrement()) // معرف الراتب
+  employee      Employee @relation(fields: [employeeId], references: [id]) // علاقة بالموظف
+  employeeId    Int      // معرف الموظف المرتبط بهذا الراتب
+  deductions    Decimal  // إجمالي الخصومات
+  overtimeHours Int      // عدد ساعات العمل الإضافي
+  totalSalary   Decimal  // إجمالي الراتب بعد الخصومات
+  periodStart   DateTime // تاريخ بداية الفترة
+  periodEnd     DateTime // تاريخ نهاية الفترة
 }
 
+// نموذج الحضور والانصراف، يحتوي على تسجيل الحضور لكل موظف
 model Attendance {
-  id            Int      @id @default(autoincrement()) // تغيير ID ليكون Int
-  employeeId    Int // تغيير نوع employeeId إلى Int
+  id            Int      @id @default(autoincrement()) // معرف الحضور
+  employeeId    Int      // معرف الموظف المرتبط بالحضور
   employee      Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-  date          DateTime
-  checkIn       DateTime
-  checkOut      DateTime
-  normalHours   Float
-  overtimeHours Float
-  totalTime     Float
+  date          DateTime // تاريخ اليوم
+  checkIn       DateTime // وقت الدخول
+  checkOut      DateTime // وقت الخروج
+  normalHours   Float    // عدد الساعات العادية
+  overtimeHours Float    // عدد ساعات العمل الإضافي
+  totalTime     Float    // إجمالي ساعات العمل في اليوم
 }
 
+// نموذج الخصومات، يسجل أي خصم يتم تطبيقه على الموظف
 model Deduction {
   id         Int      @id @default(autoincrement())
   employee   Employee @relation(fields: [employeeId], references: [id])
   employeeId Int
-  amount     Decimal
-  date       DateTime
+  amount     Decimal  // قيمة الخصم
+  date       DateTime // تاريخ الخصم
 }
 
+// نموذج المكافآت، يسجل أي مكافأة يحصل عليها الموظف
 model Bonus {
   id         Int      @id @default(autoincrement())
   employee   Employee @relation(fields: [employeeId], references: [id])
   employeeId Int
-  amount     Decimal
-  reason     String
-  date       DateTime
+  amount     Decimal  // قيمة المكافأة
+  reason     String   // سبب المكافأة
+  date       DateTime // تاريخ المكافأة
 }
 
+// نموذج العهد، يحتوي على تفاصيل المواد التي تمتلكها الشركة ويتم تخصيصها للمشاريع
 model Custody {
   id        Int       @id @default(autoincrement())
-  name      String
-  code      String    @unique
-  quantity  Int
-  status    String    @default("active")
-  expenses  Expense[]
+  name      String    // اسم العهدة
+  code      String    @unique // كود فريد للعهدة
+  quantity  Int       // الكمية المتاحة
+  status    String    @default("active") // حالة العهدة (افتراضيًا نشطة)
+  expenses  Expense[] // علاقة بالمصاريف المرتبطة بهذه العهدة
   project   Project?  @relation(fields: [projectId], references: [id])
   projectId Int?
 }
 
+// نموذج المصاريف، يسجل تفاصيل المصاريف لكل عهدة أو مشروع
 model Expense {
   id                Int      @id @default(autoincrement())
-  description       String
-  amount            Decimal
-  expenseType       String
-  responsiblePerson String
+  description       String   // وصف المصروف
+  amount            Decimal  // قيمة المصروف
+  expenseType       String   // نوع المصروف
+  responsiblePerson String   // الشخص المسؤول عن المصروف
   custody           Custody  @relation(fields: [custodyId], references: [id])
   custodyId         Int
   project           Project? @relation(fields: [projectId], references: [id])
   projectId         Int?
-  date              DateTime
+  date              DateTime // تاريخ المصروف
 }
 
+// نموذج المشاريع، يحتوي على تفاصيل المشاريع المرتبطة بالعهد والمصاريف
 model Project {
   id          Int       @id @default(autoincrement())
-  name        String
-  managerName String
-  budget      Decimal
-  startDate   DateTime
-  endDate     DateTime?
-  status      String    @default("active")
-  custodies   Custody[]
-  expenses    Expense[]
+  name        String    // اسم المشروع
+  managerName String    // اسم مدير المشروع
+  budget      Decimal   // الميزانية المخصصة للمشروع
+  startDate   DateTime  // تاريخ بدء المشروع
+  endDate     DateTime? // تاريخ انتهاء المشروع (يمكن أن يكون فارغًا)
+  status      String    @default("active") // حالة المشروع
+  custodies   Custody[] // علاقة بالعهد المرتبطة بالمشروع
+  expenses    Expense[] // علاقة بالمصاريف المرتبطة بالمشروع
 }
 
+// نموذج الموردين، يخزن بيانات الموردين الذين تتعامل معهم الشركة
 model Supplier {
   id          Int               @id @default(autoincrement())
-  name        String
-  phoneNumber String
-  address     String
-  invoices    SupplierInvoice[]
-
-  Inventory Inventory[]
+  name        String            // اسم المورد
+  phoneNumber String            // رقم هاتف المورد
+  address     String            // عنوان المورد
+  invoices    SupplierInvoice[] // علاقة بفواتير الموردين
+  Inventory   Inventory[]       // علاقة بالمخزون المرتبط بالمورد
 }
 
+// نموذج فواتير الموردين، يخزن تفاصيل الفواتير الصادرة عن الموردين
 model SupplierInvoice {
   id          Int           @id @default(autoincrement())
   supplier    Supplier      @relation(fields: [supplierId], references: [id])
   supplierId  Int
-  invoiceType String
-  items       InvoiceItem[]
-  totalAmount Decimal
+  invoiceType String        // نوع الفاتورة
+  items       InvoiceItem[] // قائمة العناصر في الفاتورة
+  totalAmount Decimal       // إجمالي مبلغ الفاتورة
 }
 
+// نموذج عناصر الفواتير، يخزن تفاصيل كل عنصر داخل فاتورة المورد
 model InvoiceItem {
   id        Int             @id @default(autoincrement())
   invoice   SupplierInvoice @relation(fields: [invoiceId], references: [id])
   invoiceId Int
-  itemName  String
-  itemType  String
-  quantity  Int
-  unit      String
-  unitPrice Decimal
+  itemName  String          // اسم العنصر
+  itemType  String          // نوع العنصر
+  quantity  Int             // الكمية المشتراة
+  unit      String          // وحدة القياس
+  unitPrice Decimal         // سعر الوحدة
 }
 
+// نموذج المخزون، يحتوي على تفاصيل العناصر المخزنة في الشركة
 model Inventory {
   id           Int       @id @default(autoincrement())
-  itemName     String
-  category     String
-  itemType     String
-  purchaseDate DateTime
-  price        Decimal
-  quantity     Int
-  minQuantity  Int
+  itemName     String    // اسم العنصر
+  category     String    // تصنيف العنصر
+  itemType     String    // نوع العنصر
+  purchaseDate DateTime  // تاريخ الشراء
+  price        Decimal   // سعر الشراء
+  quantity     Int       // الكمية المتوفرة
+  minQuantity  Int       // الحد الأدنى للكمية
   supplier     Supplier? @relation(fields: [supplierId], references: [id])
   supplierId   Int?
 }
 
+// نموذج المستخدمين، يخزن بيانات المستخدمين الذين لديهم صلاحيات على النظام
 model User {
   id          Int          @id @default(autoincrement())
-  email       String       @unique
-  name        String
-  password    String
-  role        String
-  permissions Permission[]
+  email       String       @unique // البريد الإلكتروني (يجب أن يكون فريدًا)
+  name        String       // اسم المستخدم
+  password    String       // كلمة المرور
+  role        String       // دور المستخدم في النظام
+  permissions Permission[] // علاقة بالصلاحيات الخاصة بالمستخدم
 }
 
+// نموذج الصلاحيات، يخزن معلومات عن الصلاحيات المعطاة لكل مستخدم
 model Permission {
   id       Int    @id @default(autoincrement())
-  userId   Int
+  userId   Int    // معرف المستخدم
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  menuItem String
+  menuItem String // العنصر الذي يملك المستخدم صلاحية عليه
 }

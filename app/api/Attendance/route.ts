@@ -44,25 +44,30 @@ export async function POST(req: Request) {
   }
 }
 
-// app/api/attendance/route.ts
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-
+  
   try {
+    const employeeId = Number(searchParams.get("employeeId"));
+    const start = new Date(searchParams.get("start")!);
+    const end = new Date(searchParams.get("end")!);
+
+    if (!employeeId || isNaN(employeeId)) {
+      return NextResponse.json({ error: "المعرف غير صحيح" }, { status: 400 });
+    }
+
     const data = await prisma.attendance.findMany({
       where: {
-        employeeId: Number(searchParams.get("employeeId")),
-        date: {
-          gte: new Date(searchParams.get("start")!),
-          lte: new Date(searchParams.get("end")!),
-        },
+        employeeId,
+        date: { gte: start, lte: end },
       },
       include: { employee: true },
     });
 
     return NextResponse.json(data);
   } catch (error) {
+    console.error("Database Error:", error);
     return NextResponse.json({ error: "خطأ في جلب البيانات" }, { status: 500 });
   }
 }
